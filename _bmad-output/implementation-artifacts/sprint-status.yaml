@@ -42,9 +42,9 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   epic-1: in-progress
   1-1-monorepo-scaffold-and-shared-types: done
-  1-2-backend-api-create-and-list-todos: ready-for-dev
-  1-3-frontend-add-and-view-todos: ready-for-dev
-  1-4-readme-and-developer-setup: ready-for-dev
+  1-2-backend-api-create-and-list-todos: done
+  1-3-frontend-add-and-view-todos: done
+  1-4-readme-and-developer-setup: done
   epic-1-retrospective: optional
 
   epic-2: backlog

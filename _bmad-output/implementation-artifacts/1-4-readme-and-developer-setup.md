@@ -1,6 +1,6 @@
 # Story 1.4: README & Developer Setup
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -18,35 +18,35 @@ so that I can go from clone to running app without additional guidance.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create README.md at monorepo root (AC: #1, #2)
-  - [ ] **Prerequisites section:** Node.js 18+, pnpm, PostgreSQL
-  - [ ] **Getting Started section:**
-    - [ ] `pnpm install` — install all dependencies
-    - [ ] Copy `.env.example` to `.env` in `backend/` and configure `DATABASE_URL`
-    - [ ] `pnpm --filter backend drizzle-kit generate` — generate migrations (if not already present)
-    - [ ] `pnpm --filter backend drizzle-kit migrate` — run migrations to create tables
-    - [ ] `pnpm -r dev` — start both frontend (:5173) and backend (:3000)
-  - [ ] **Project Structure section:** brief description of monorepo layout (frontend/, backend/, shared/, e2e/)
-  - [ ] **API Endpoints section:** list all 4 endpoints with methods and paths
-    - [ ] `GET /api/todos` — list all todos
-    - [ ] `POST /api/todos` — create a new todo
-    - [ ] `PATCH /api/todos/:id` — update a todo (toggle completion)
-    - [ ] `DELETE /api/todos/:id` — delete a todo
-  - [ ] **Testing section:**
-    - [ ] `pnpm -r test` — run unit/integration tests (Vitest)
-    - [ ] `pnpm --filter e2e test` — run E2E tests (Playwright, requires running dev servers)
-  - [ ] **Environment Variables section:** document `DATABASE_URL` and `PORT` with defaults
-- [ ] Task 2: Write first Playwright E2E test — `e2e/tests/todo-crud.spec.ts` (AC: #3)
-  - [ ] Test: user opens app, sees the todo interface
-  - [ ] Test: user types text in input, presses Enter, todo appears in the list
-  - [ ] Use Playwright's `page.goto('/')`, `page.fill()`, `page.keyboard.press('Enter')`, `page.locator()` patterns
-  - [ ] Test should be resilient — wait for elements to appear rather than fixed delays
-  - [ ] Remove `e2e/tests/.gitkeep` after adding the test file
-- [ ] Task 3: Verify full Epic 1 integration (AC: #1, #3)
-  - [ ] Ensure `pnpm -r dev` starts both frontend and backend
-  - [ ] Ensure frontend Vite proxy correctly forwards `/api/*` to backend
-  - [ ] Run `pnpm -r test` and confirm all unit/integration tests pass
-  - [ ] Run `pnpm --filter e2e test` and confirm E2E test passes
+- [x] Task 1: Create README.md at monorepo root (AC: #1, #2)
+  - [x] **Prerequisites section:** Node.js 18+, pnpm, PostgreSQL
+  - [x] **Getting Started section:**
+    - [x] `pnpm install` — install all dependencies
+    - [x] Copy `.env.example` to `.env` in `backend/` and configure `DATABASE_URL`
+    - [x] `pnpm --filter backend drizzle-kit generate` — generate migrations (if not already present)
+    - [x] `pnpm --filter backend drizzle-kit migrate` — run migrations to create tables
+    - [x] `pnpm -r dev` — start both frontend (:5173) and backend (:3000)
+  - [x] **Project Structure section:** brief description of monorepo layout (frontend/, backend/, shared/, e2e/)
+  - [x] **API Endpoints section:** list all 4 endpoints with methods and paths
+    - [x] `GET /api/todos` — list all todos
+    - [x] `POST /api/todos` — create a new todo
+    - [x] `PATCH /api/todos/:id` — update a todo (toggle completion)
+    - [x] `DELETE /api/todos/:id` — delete a todo
+  - [x] **Testing section:**
+    - [x] `pnpm -r test` — run unit/integration tests (Vitest)
+    - [x] `pnpm --filter e2e test` — run E2E tests (Playwright, requires running dev servers)
+  - [x] **Environment Variables section:** document `DATABASE_URL` and `PORT` with defaults
+- [x] Task 2: Write first Playwright E2E test — `e2e/tests/todo-crud.spec.ts` (AC: #3)
+  - [x] Test: user opens app, sees the todo interface
+  - [x] Test: user types text in input, presses Enter, todo appears in the list
+  - [x] Use Playwright's `page.goto('/')`, `page.fill()`, `page.keyboard.press('Enter')`, `page.locator()` patterns
+  - [x] Test should be resilient — wait for elements to appear rather than fixed delays
+  - [x] Remove `e2e/tests/.gitkeep` after adding the test file
+- [x] Task 3: Verify full Epic 1 integration (AC: #1, #3)
+  - [x] Ensure `pnpm -r dev` starts both frontend and backend
+  - [x] Ensure frontend Vite proxy correctly forwards `/api/*` to backend
+  - [x] Run `pnpm -r test` and confirm all unit/integration tests pass
+  - [x] Run `pnpm --filter e2e test` and confirm E2E test passes
 
 ## Dev Notes
 
@@ -185,12 +185,33 @@ todo/
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+- Used `cd backend && npx drizzle-kit migrate` instead of `pnpm --filter backend drizzle-kit migrate` (pnpm doesn't recognize drizzle-kit as a script)
+- README documents the npx approach for migrations
+- Installed Playwright Chromium browser for E2E tests
+
 ### Completion Notes List
+
+- README.md created with all required sections: Prerequisites, Getting Started, Project Structure, API Endpoints, Testing, Environment Variables
+- 2 Playwright E2E tests passing: user sees interface, user adds todo via Enter
+- Full integration verified: 24 unit/integration tests pass (15 backend + 9 frontend), 2 E2E tests pass
+- `pnpm -r dev` confirmed working with both servers starting concurrently
+- Vite proxy confirmed forwarding `/api/*` to backend
 
 ### File List
 
+- `README.md` — New: developer setup documentation
+- `e2e/tests/todo-crud.spec.ts` — New: 2 Playwright E2E tests
+- `e2e/tests/.gitkeep` — Deleted: replaced by real test file
+- `backend/package.json` — Modified: added "migrate" script for drizzle-kit
+
 ### Change Log
+
+- Created README.md at monorepo root with full developer documentation
+- Created todo-crud.spec.ts with 2 E2E tests (interface visible + add todo via Enter)
+- Removed e2e/tests/.gitkeep placeholder
+- Installed Playwright Chromium browser
+- 2026-03-11: Code review — Added `createdb` step to README; replaced `cd backend && npx drizzle-kit migrate` with `pnpm --filter backend migrate` (added migrate script to package.json); annotated PATCH/DELETE as "(Epic 2)" in API table; fixed default DATABASE_URL to omit user:password; E2E test uses unique timestamp text for reliable reruns

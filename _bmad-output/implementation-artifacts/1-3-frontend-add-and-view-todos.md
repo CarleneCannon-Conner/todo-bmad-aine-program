@@ -1,6 +1,6 @@
 # Story 1.3: Frontend — Add & View Todos
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -22,60 +22,60 @@ so that I can capture and track tasks without any setup or friction.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Install SWR dependency (AC: #3)
-  - [ ] `pnpm --filter frontend add swr`
-  - [ ] SWR is the ONLY new dependency for this story
-- [ ] Task 2: Create API module — `frontend/src/api/todoApi.ts` (AC: #3)
-  - [ ] `fetchTodos()` — GET `/api/todos`, unwrap `ApiResponse<Todo[]>`, return `Todo[]`
-  - [ ] `createTodo(text)` — POST `/api/todos` with `{ text }`, unwrap `ApiResponse<Todo>`, return `Todo`
-  - [ ] On success (`success: true`): return `.data`
-  - [ ] On error (`success: false`): throw an error with the error message from the response
-  - [ ] Use native `fetch` — no axios or other HTTP libraries
-  - [ ] All functions typed using `Todo`, `ApiResponse` from `@todo/shared`
-- [ ] Task 3: Create SWR hook — `frontend/src/hooks/useTodos.ts` (AC: #1, #2, #3)
-  - [ ] `useTodos()` hook wrapping `todoApi.fetchTodos` with SWR
-  - [ ] SWR key: `"/api/todos"`
-  - [ ] Expose: `todos`, `isLoading`, `error`, `createTodo(text)`
-  - [ ] `createTodo(text)`: call `todoApi.createTodo(text)`, then `mutate()` to revalidate the cache
-  - [ ] Pessimistic create — do NOT use optimistic update for create (wait for server confirmation)
-  - [ ] Return type should make `todos` available as `Todo[]` (default to empty array when undefined)
-- [ ] Task 4: Create TaskItem component — `frontend/src/components/TaskItem/` (AC: #1)
-  - [ ] `TaskItem.tsx` — receives `todo: Todo` prop, renders todo text
-  - [ ] `TaskItem.css` — minimal styling (this is pre-theme, Epic 3 applies full design)
-  - [ ] `index.ts` — barrel export
-  - [ ] Basic display only — no toggle, no delete, no hex checkbox (those are Epic 2/3)
-- [ ] Task 5: Create TaskList component — `frontend/src/components/TaskList/` (AC: #1)
-  - [ ] `TaskList.tsx` — receives `todos: Todo[]` prop, renders list of `TaskItem` components
-  - [ ] `TaskList.css` — minimal list styling
-  - [ ] `index.ts` — barrel export
-  - [ ] Use semantic `<ul>/<li>` elements
-  - [ ] Basic rendering only — no loading skeleton, no empty state (those are Story 3.4)
-- [ ] Task 6: Create TaskInput component — `frontend/src/components/TaskInput/` (AC: #2)
-  - [ ] `TaskInput.tsx` — controlled input with Enter key submit
-  - [ ] `TaskInput.css` — minimal styling
-  - [ ] `index.ts` — barrel export
-  - [ ] Placeholder text: `"add a task..."` (always, per FR9)
-  - [ ] On Enter: call `onSubmit(text)` callback, clear input on success
-  - [ ] Enter-only submission — no AddButton in this story (that's Story 2.4)
-  - [ ] Semantic `<input>` element
-- [ ] Task 7: Wire up App.tsx (AC: #1, #2, #4)
-  - [ ] Import `useTodos` hook
-  - [ ] Import `TaskList`, `TaskInput` components
-  - [ ] Render TaskInput and TaskList
-  - [ ] Connect TaskInput's onSubmit to `useTodos().createTodo`
-  - [ ] Pass `todos` from hook to TaskList
-  - [ ] Replace Vite default content — remove placeholder `<h1>Todo App</h1>`
-  - [ ] Update App.css — remove Vite default styles, keep minimal layout
-- [ ] Task 8: Write todoApi tests — `frontend/src/api/todoApi.test.ts` (AC: #5)
-  - [ ] Test: `fetchTodos` calls GET `/api/todos` and returns unwrapped data
-  - [ ] Test: `createTodo` calls POST `/api/todos` with correct body and returns unwrapped data
-  - [ ] Test: functions throw on error responses (`success: false`)
-  - [ ] Mock `fetch` globally for these tests
-- [ ] Task 9: Write useTodos hook tests — `frontend/src/hooks/useTodos.test.ts` (AC: #5)
-  - [ ] Test: hook returns todos from API
-  - [ ] Test: hook triggers mutate after create
-  - [ ] Mock `todoApi` module — this is the single mock boundary
-  - [ ] Use `@testing-library/react` `renderHook` for SWR hook testing
+- [x] Task 1: Install SWR dependency (AC: #3)
+  - [x] `pnpm --filter frontend add swr`
+  - [x] SWR is the ONLY new dependency for this story
+- [x] Task 2: Create API module — `frontend/src/api/todoApi.ts` (AC: #3)
+  - [x] `fetchTodos()` — GET `/api/todos`, unwrap `ApiResponse<Todo[]>`, return `Todo[]`
+  - [x] `createTodo(text)` — POST `/api/todos` with `{ text }`, unwrap `ApiResponse<Todo>`, return `Todo`
+  - [x] On success (`success: true`): return `.data`
+  - [x] On error (`success: false`): throw an error with the error message from the response
+  - [x] Use native `fetch` — no axios or other HTTP libraries
+  - [x] All functions typed using `Todo`, `ApiResponse` from `@todo/shared`
+- [x] Task 3: Create SWR hook — `frontend/src/hooks/useTodos.ts` (AC: #1, #2, #3)
+  - [x] `useTodos()` hook wrapping `todoApi.fetchTodos` with SWR
+  - [x] SWR key: `"/api/todos"`
+  - [x] Expose: `todos`, `isLoading`, `error`, `createTodo(text)`
+  - [x] `createTodo(text)`: call `todoApi.createTodo(text)`, then `mutate()` to revalidate the cache
+  - [x] Pessimistic create — do NOT use optimistic update for create (wait for server confirmation)
+  - [x] Return type should make `todos` available as `Todo[]` (default to empty array when undefined)
+- [x] Task 4: Create TaskItem component — `frontend/src/components/TaskItem/` (AC: #1)
+  - [x] `TaskItem.tsx` — receives `todo: Todo` prop, renders todo text
+  - [x] `TaskItem.css` — minimal styling (this is pre-theme, Epic 3 applies full design)
+  - [x] `index.ts` — barrel export
+  - [x] Basic display only — no toggle, no delete, no hex checkbox (those are Epic 2/3)
+- [x] Task 5: Create TaskList component — `frontend/src/components/TaskList/` (AC: #1)
+  - [x] `TaskList.tsx` — receives `todos: Todo[]` prop, renders list of `TaskItem` components
+  - [x] `TaskList.css` — minimal list styling
+  - [x] `index.ts` — barrel export
+  - [x] Use semantic `<ul>/<li>` elements
+  - [x] Basic rendering only — no loading skeleton, no empty state (those are Story 3.4)
+- [x] Task 6: Create TaskInput component — `frontend/src/components/TaskInput/` (AC: #2)
+  - [x] `TaskInput.tsx` — controlled input with Enter key submit
+  - [x] `TaskInput.css` — minimal styling
+  - [x] `index.ts` — barrel export
+  - [x] Placeholder text: `"add a task..."` (always, per FR9)
+  - [x] On Enter: call `onSubmit(text)` callback, clear input on success
+  - [x] Enter-only submission — no AddButton in this story (that's Story 2.4)
+  - [x] Semantic `<input>` element
+- [x] Task 7: Wire up App.tsx (AC: #1, #2, #4)
+  - [x] Import `useTodos` hook
+  - [x] Import `TaskList`, `TaskInput` components
+  - [x] Render TaskInput and TaskList
+  - [x] Connect TaskInput's onSubmit to `useTodos().createTodo`
+  - [x] Pass `todos` from hook to TaskList
+  - [x] Replace Vite default content — remove placeholder `<h1>Todo App</h1>`
+  - [x] Update App.css — remove Vite default styles, keep minimal layout
+- [x] Task 8: Write todoApi tests — `frontend/src/api/todoApi.test.ts` (AC: #5)
+  - [x] Test: `fetchTodos` calls GET `/api/todos` and returns unwrapped data
+  - [x] Test: `createTodo` calls POST `/api/todos` with correct body and returns unwrapped data
+  - [x] Test: functions throw on error responses (`success: false`)
+  - [x] Mock `fetch` globally for these tests
+- [x] Task 9: Write useTodos hook tests — `frontend/src/hooks/useTodos.test.ts` (AC: #5)
+  - [x] Test: hook returns todos from API
+  - [x] Test: hook triggers mutate after create
+  - [x] Mock `todoApi` module — this is the single mock boundary
+  - [x] Use `@testing-library/react` `renderHook` for SWR hook testing
 
 ## Dev Notes
 
@@ -310,12 +310,46 @@ No changes needed. Frontend fetch calls to `/api/todos` will be proxied to the b
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+- Fixed: SWR cache leaking between tests — added SWRConfig wrapper with isolated cache provider per test
+
 ### Completion Notes List
+
+- All 9 frontend tests passing (3 test files: App.test.tsx, todoApi.test.ts, useTodos.test.ts)
+- todoApi.ts: fetchTodos + createTodo with ApiResponse<T> unwrapping and error throwing
+- useTodos.ts: SWR hook with pessimistic create and cache revalidation
+- 3 components: TaskItem (display), TaskList (ul/li semantic), TaskInput (Enter submit)
+- App.tsx wired up with useTodos hook feeding TaskInput and TaskList
+- No regressions — backend 15 tests still passing
 
 ### File List
 
+- `frontend/src/api/todoApi.ts` — API module with fetch wrapper
+- `frontend/src/api/todoApi.test.ts` — 4 API tests
+- `frontend/src/hooks/useTodos.ts` — SWR hook
+- `frontend/src/hooks/useTodos.test.ts` — 3 hook tests
+- `frontend/src/components/TaskItem/TaskItem.tsx` — Single todo display
+- `frontend/src/components/TaskItem/TaskItem.css` — Minimal styling
+- `frontend/src/components/TaskItem/index.ts` — Barrel export
+- `frontend/src/components/TaskList/TaskList.tsx` — Todo list with ul/li
+- `frontend/src/components/TaskList/TaskList.css` — List styling
+- `frontend/src/components/TaskList/index.ts` — Barrel export
+- `frontend/src/components/TaskInput/TaskInput.tsx` — Input with Enter submit
+- `frontend/src/components/TaskInput/TaskInput.css` — Input styling
+- `frontend/src/components/TaskInput/index.ts` — Barrel export
+- `frontend/src/App.tsx` — Modified: wired up useTodos + components
+- `frontend/src/App.css` — Modified: minimal layout replacing Vite defaults
+- `frontend/package.json` — Modified: added swr dependency
+
 ### Change Log
+
+- Created todoApi.ts, useTodos.ts (API + hook layer)
+- Created TaskItem, TaskList, TaskInput components with barrel exports
+- Updated App.tsx to wire up useTodos hook with components
+- Updated App.css with minimal layout styles
+- Added SWR dependency
+- Created todoApi.test.ts and useTodos.test.ts
+- 2026-03-11: Code review — todoApi.ts handleResponse now guards against non-JSON responses; TaskInput.tsx handleKeyDown catches submit errors to prevent unhandled promise rejections

@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "tsx watch --env-file .env src/server.ts",
     "start": "node dist/server.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "migrate": "drizzle-kit migrate"
   },
   "dependencies": {
+    "@sinclair/typebox": "^0.34.48",
     "@todo/shared": "workspace:*",
     "drizzle-orm": "^0.45.1",
     "fastify": "^5.7.0",
+    "fastify-plugin": "^5.1.0",
     "pg": "^8.16.0"
   },
   "devDependencies": {

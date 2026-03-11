@@ -1,6 +1,6 @@
 # Story 1.2: Backend API — Create & List Todos
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -24,48 +24,48 @@ so that my tasks survive page refreshes and browser sessions.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create Drizzle database plugin — `backend/src/db.ts` (AC: #5)
-  - [ ] Install `fastify-plugin` as a dependency
-  - [ ] Create Drizzle client wrapping `pg` Pool with `DATABASE_URL` from `process.env`
-  - [ ] Register as Fastify plugin using `fastify-plugin` so it decorates the instance as `fastify.db`
-  - [ ] Add TypeScript declaration merging for `fastify.db` on FastifyInstance
-- [ ] Task 2: Create Fastify app factory — `backend/src/app.ts` (AC: #5)
-  - [ ] Create `buildApp()` function that instantiates Fastify with `logger: true`
-  - [ ] Register db plugin
-  - [ ] Register todo routes (prefix: `/api/todos`)
-  - [ ] Export `buildApp` for use by server.ts and tests
-- [ ] Task 3: Create todo service — `backend/src/todo.service.ts` (AC: #1, #2, #3, #5)
-  - [ ] `listTodos(db)` — SELECT all, ORDER BY created_at DESC, return `Todo[]`
-  - [ ] `createTodo(db, text)` — validate non-empty after trim, INSERT, return `Todo`
-  - [ ] Service functions accept Drizzle instance as parameter (from `fastify.db`)
-  - [ ] Service throws on validation failure (empty/whitespace text) — never returns error objects
-  - [ ] Service returns domain types (`Todo`, `Todo[]`) — never API envelopes
-- [ ] Task 4: Create todo routes — `backend/src/todo.routes.ts` (AC: #1, #2, #3, #5)
-  - [ ] `GET /api/todos` — calls `listTodos`, wraps in `ApiResponse<T>`, returns 200
-  - [ ] `POST /api/todos` — TypeBox validation for `{ text: string }`, calls `createTodo`, wraps in `ApiResponse<T>`, returns 201
-  - [ ] Catch service errors → return `{ success: false, error: { code, message } }` with appropriate HTTP status (400 for validation)
-  - [ ] Register as Fastify plugin with route prefix
-- [ ] Task 5: Create server entry point — `backend/src/server.ts` (AC: #5)
-  - [ ] Import `buildApp` from `app.ts`
-  - [ ] Read PORT from `process.env` (default 3000)
-  - [ ] Call `fastify.listen({ port, host: '0.0.0.0' })`
-  - [ ] Log startup message
-- [ ] Task 6: Generate and run database migration (AC: #4)
-  - [ ] Run `pnpm --filter backend drizzle-kit generate` to create SQL migration from shared schema
-  - [ ] Verify migration file creates `todos` table with correct columns
-  - [ ] Document migration command in dev notes
-- [ ] Task 7: Write service unit tests — `backend/src/todo.service.test.ts` (AC: #6)
-  - [ ] Test: `createTodo` returns a Todo with all fields (id, text, isCompleted, createdAt)
-  - [ ] Test: `listTodos` returns todos sorted by created_at DESC
-  - [ ] Test: `createTodo` throws on empty string
-  - [ ] Test: `createTodo` throws on whitespace-only string
-  - [ ] Tests need a real test database (see Dev Notes for setup)
-- [ ] Task 8: Write route integration tests — `backend/src/todo.routes.test.ts` (AC: #6)
-  - [ ] Test: POST `/api/todos` with valid text → 201, `ApiResponse<T>` with success:true and data
-  - [ ] Test: POST `/api/todos` with empty text → 400, `ApiResponse<T>` with success:false and VALIDATION_ERROR
-  - [ ] Test: GET `/api/todos` → 200, `ApiResponse<T>` with data array
-  - [ ] Test: All responses match `ApiResponse<T>` envelope shape
-  - [ ] Use `buildApp()` to create test instances (inject pattern)
+- [x] Task 1: Create Drizzle database plugin — `backend/src/db.ts` (AC: #5)
+  - [x] Install `fastify-plugin` as a dependency
+  - [x] Create Drizzle client wrapping `pg` Pool with `DATABASE_URL` from `process.env`
+  - [x] Register as Fastify plugin using `fastify-plugin` so it decorates the instance as `fastify.db`
+  - [x] Add TypeScript declaration merging for `fastify.db` on FastifyInstance
+- [x] Task 2: Create Fastify app factory — `backend/src/app.ts` (AC: #5)
+  - [x] Create `buildApp()` function that instantiates Fastify with `logger: true`
+  - [x] Register db plugin
+  - [x] Register todo routes (prefix: `/api/todos`)
+  - [x] Export `buildApp` for use by server.ts and tests
+- [x] Task 3: Create todo service — `backend/src/todo.service.ts` (AC: #1, #2, #3, #5)
+  - [x] `listTodos(db)` — SELECT all, ORDER BY created_at DESC, return `Todo[]`
+  - [x] `createTodo(db, text)` — validate non-empty after trim, INSERT, return `Todo`
+  - [x] Service functions accept Drizzle instance as parameter (from `fastify.db`)
+  - [x] Service throws on validation failure (empty/whitespace text) — never returns error objects
+  - [x] Service returns domain types (`Todo`, `Todo[]`) — never API envelopes
+- [x] Task 4: Create todo routes — `backend/src/todo.routes.ts` (AC: #1, #2, #3, #5)
+  - [x] `GET /api/todos` — calls `listTodos`, wraps in `ApiResponse<T>`, returns 200
+  - [x] `POST /api/todos` — TypeBox validation for `{ text: string }`, calls `createTodo`, wraps in `ApiResponse<T>`, returns 201
+  - [x] Catch service errors → return `{ success: false, error: { code, message } }` with appropriate HTTP status (400 for validation)
+  - [x] Register as Fastify plugin with route prefix
+- [x] Task 5: Create server entry point — `backend/src/server.ts` (AC: #5)
+  - [x] Import `buildApp` from `app.ts`
+  - [x] Read PORT from `process.env` (default 3000)
+  - [x] Call `fastify.listen({ port, host: '0.0.0.0' })`
+  - [x] Log startup message
+- [x] Task 6: Generate and run database migration (AC: #4)
+  - [x] Run `pnpm --filter backend drizzle-kit generate` to create SQL migration from shared schema
+  - [x] Verify migration file creates `todos` table with correct columns
+  - [x] Document migration command in dev notes
+- [x] Task 7: Write service unit tests — `backend/src/todo.service.test.ts` (AC: #6)
+  - [x] Test: `createTodo` returns a Todo with all fields (id, text, isCompleted, createdAt)
+  - [x] Test: `listTodos` returns todos sorted by created_at DESC
+  - [x] Test: `createTodo` throws on empty string
+  - [x] Test: `createTodo` throws on whitespace-only string
+  - [x] Tests need a real test database (see Dev Notes for setup)
+- [x] Task 8: Write route integration tests — `backend/src/todo.routes.test.ts` (AC: #6)
+  - [x] Test: POST `/api/todos` with valid text → 201, `ApiResponse<T>` with success:true and data
+  - [x] Test: POST `/api/todos` with empty text → 400, `ApiResponse<T>` with success:false and VALIDATION_ERROR
+  - [x] Test: GET `/api/todos` → 200, `ApiResponse<T>` with data array
+  - [x] Test: All responses match `ApiResponse<T>` envelope shape
+  - [x] Use `buildApp()` to create test instances (inject pattern)
 
 ## Dev Notes
 
@@ -98,7 +98,7 @@ so that my tasks survive page refreshes and browser sessions.
 
 **New dependency needed:** `fastify-plugin` — required for registering Drizzle as a proper Fastify plugin.
 
-**TypeBox:** Bundled with Fastify 5.x — import from `@sinclair/typebox` (included as Fastify dependency). Do NOT install separately.
+**TypeBox:** NOT bundled with Fastify 5.x — must install `@sinclair/typebox` separately. Import from `@sinclair/typebox`.
 
 ### Shared Types Already Defined (Do NOT Recreate)
 
@@ -241,12 +241,46 @@ TypeBox integrates with Fastify's schema validation natively. Use `schema: { bod
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+- Fixed: `@sinclair/typebox` not bundled with Fastify 5.x — had to install separately despite story notes
+- Fixed: `loadEnv` not exported from vitest 4.x — used hardcoded test DATABASE_URL in vitest.config.ts
+- Fixed: PostgreSQL 14 broken library links — reinstalled via homebrew (14.1 → 14.22)
+- Created test database: `createuser -s user`, `createdb -U user todo_test`
+
 ### Completion Notes List
+
+- All 15 tests passing (3 test files: setup.test.ts, todo.service.test.ts, todo.routes.test.ts)
+- Service/Route boundary pattern implemented as specified
+- TypeBox validation on POST body with minLength: 1
+- Fastify error handler catches both service ValidationError and Fastify schema validation errors
+- Drizzle migration generated: `backend/drizzle/0000_overjoyed_venom.sql`
 
 ### File List
 
+- `backend/package.json` — Modified: added fastify-plugin, @sinclair/typebox dependencies
+- `backend/src/db.ts` — Drizzle Fastify plugin with declaration merging
+- `backend/src/app.ts` — Fastify app factory with plugin/route registration
+- `backend/src/todo.service.ts` — listTodos, createTodo, ValidationError class
+- `backend/src/todo.routes.ts` — GET/POST /api/todos with ApiResponse<T> envelope
+- `backend/src/server.ts` — Server entry point
+- `backend/src/test-helpers.ts` — Shared test DB setup/teardown utilities
+- `backend/src/todo.service.test.ts` — 6 service unit tests
+- `backend/src/todo.routes.test.ts` — 8 route integration tests (incl. whitespace validation, sort order)
+- `shared/package.json` — Modified: added "type": "module" and "exports" field for ESM resolution
+- `backend/vitest.config.ts` — Updated to load .env.test file
+- `backend/drizzle/0000_overjoyed_venom.sql` — Migration creating todos table
+- `backend/drizzle/meta/0000_snapshot.json` — Drizzle migration metadata
+- `backend/drizzle/meta/_journal.json` — Drizzle migration journal
+
 ### Change Log
+
+- Created db.ts, app.ts, todo.service.ts, todo.routes.ts, server.ts
+- Created todo.service.test.ts, todo.routes.test.ts
+- Generated Drizzle migration files
+- Added `fastify-plugin` and `@sinclair/typebox` as dependencies
+- Updated vitest.config.ts for test database configuration
+- 2026-03-11: Code review — Refactored vitest.config.ts to load .env.test instead of hardcoding credentials; extracted shared test-helpers.ts to eliminate duplicate CREATE TABLE SQL and pool-per-test inefficiency; added whitespace-only route integration test; corrected dev notes re: @sinclair/typebox; updated File List
+- 2026-03-11: Code review #2 — test-helpers.ts now reads actual migration SQL file instead of hardcoded CREATE TABLE; added sort order integration test for GET endpoint (AC #2); aligned DB type annotation in todo.service.ts; documented shared/package.json change in File List; added e2e artifacts to .gitignore
