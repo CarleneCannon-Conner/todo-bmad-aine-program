@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(done)",
+      "WebSearch",
+      "Bash(git init)",
+      "Bash(gh auth status)",
+      "Bash(git add .gitignore .claude/ Learning-BMAD-Notes.md _bmad/ _bmad-output/ assets/ project-context.md docs/)"
+    ]
+  }
+}

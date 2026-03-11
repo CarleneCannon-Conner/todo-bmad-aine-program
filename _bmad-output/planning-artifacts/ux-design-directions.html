@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>todo — A2 Final Design Direction</title>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  /* === Global === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Patrick Hand', cursive, sans-serif; background: #1a1a1a; color: #fff; }
+
+  /* === Navigation === */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: #222; border-bottom: 2px solid #444; padding: 12px 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .nav h1 { font-size: 20px; margin-right: auto; }
+  .nav button { font-family: inherit; font-size: 15px; padding: 8px 16px; border: 2px solid #666; border-radius: 8px; background: transparent; color: #fff; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .nav button:hover, .nav button.active { background: #f5a623; color: #1a1a1a; border-color: #f5a623; }
+  .nav .hint { font-size: 13px; color: #999; width: 100%; }
+
+  /* === Mockup containers === */
+  .mockup-section { display: none; padding: 80px 0 40px; min-height: 100vh; }
+  .mockup-section.active { display: block; }
+  .mockup-label { text-align: center; padding: 20px; font-size: 22px; color: #ccc; }
+  .mockup-label span { display: block; font-size: 14px; color: #888; margin-top: 4px; }
+  .mockup-notes { max-width: 520px; margin: 16px auto 0; padding: 16px 20px; background: #2a2a2a; border-radius: 12px; font-size: 14px; color: #aaa; line-height: 1.6; }
+  .mockup-notes strong { color: #f5a623; }
+
+  /* === Phone frame (mobile mockup) === */
+  .phone-frame { max-width: 400px; margin: 0 auto; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.5); border: 3px solid #444; }
+
+  /* === Desktop frame (widescreen mockup) === */
+  .desktop-frame { max-width: 1100px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.5); border: 3px solid #444; }
+  .desktop-titlebar { background: #333; padding: 8px 16px; display: flex; align-items: center; gap: 6px; }
+  .desktop-titlebar .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .desktop-titlebar .dot.red { background: #ff5f57; }
+  .desktop-titlebar .dot.yellow { background: #febc2e; }
+  .desktop-titlebar .dot.green { background: #28c840; }
+  .desktop-titlebar .url { margin-left: 16px; background: #555; border-radius: 4px; padding: 3px 12px; font-size: 12px; color: #aaa; font-family: monospace; }
+  .desktop-bg { background: #F5EDE0; min-height: 600px; display: flex; justify-content: center; padding: 40px 24px; }
+  .card-style { border-radius: 20px; box-shadow: 0 4px 24px rgba(61, 46, 31, 0.18), 0 1px 4px rgba(61, 46, 31, 0.10); width: 100%; min-height: 520px; }
+
+  /* === Shared A2 styles === */
+  .dir-a2 { background: #FFF8EE; color: #3D2E1F; min-height: 100%; }
+  .dir-a2 .app-container { max-width: 480px; margin: 0 auto; padding: 0; }
+  .dir-a2 .bee-header { text-align: center; padding: 24px 16px 8px; }
+  .dir-a2 .bee-header .bee-icon { width: 60px; height: 60px; }
+  .dir-a2 .bee-header h2 { font-size: 28px; color: #3D2E1F; margin-top: 4px; }
+  .dir-a2 .input-area { padding: 8px 20px 16px; display: flex; gap: 8px; align-items: center; }
+  .dir-a2 .input-area input { flex: 1; font-family: inherit; font-size: 18px; padding: 10px 14px; border: 2px solid #E8D5B5; border-radius: 10px; background: #FFF; color: #3D2E1F; outline: none; }
+  .dir-a2 .add-btn { display: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #E8D5B5; background: #FFF; color: #C4A97D; font-size: 22px; cursor: pointer; flex-shrink: 0; transition: all 0.15s; font-family: inherit; line-height: 1; }
+  .dir-a2 .add-btn:hover { background: #F5A623; color: #FFF; border-color: #F5A623; }
+  .dir-a2 .add-btn:focus-visible { outline: 2px solid #F5A623; outline-offset: 2px; }
+  .dir-a2 .add-btn.active { background: #F5A623; color: #FFF; border-color: #F5A623; }
+  .dir-a2 .add-btn.inactive { opacity: 0.4; cursor: default; pointer-events: none; }
+  .dir-a2 .add-btn.inactive:hover { background: #FFF; color: #C4A97D; border-color: #E8D5B5; }
+  .show-add-btn .dir-a2 .add-btn { display: flex; align-items: center; justify-content: center; }
+
+  /* Loading skeleton */
+  .skeleton-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 6px; }
+  .skeleton-hex { width: 24px; height: 24px; flex-shrink: 0; animation: pulse 1.5s ease-in-out infinite; }
+  .skeleton-hex polygon { fill: #F0E4D0; stroke: #E0D0B8; stroke-width: 1.5; }
+  .skeleton-text { height: 18px; background: #F0E4D0; border-radius: 6px; animation: pulse 1.5s ease-in-out infinite; }
+  .skeleton-text.w70 { width: 70%; }
+  .skeleton-text.w50 { width: 50%; }
+  .skeleton-text.w85 { width: 85%; }
+  .skeleton-text.w40 { width: 40%; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .dir-a2 .input-area input::placeholder { color: #C4A97D; }
+  .dir-a2 .input-area input:focus { border-color: #F5A623; }
+  .dir-a2 .task-list { padding: 0 20px 20px; }
+  .dir-a2 .task-item { display: flex; align-items: flex-start; gap: 12px; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; transition: background 0.1s; cursor: pointer; }
+  .dir-a2 .task-item .hex-checkbox { margin-top: 3px; }
+  .dir-a2 .task-item .delete-btn { margin-top: 1px; }
+  .dir-a2 .task-item:hover { background: #FFF0D6; }
+  .dir-a2 .task-text { font-size: 18px; flex: 1; }
+  .dir-a2 .task-item.done .task-text { text-decoration: line-through; color: #B8A68E; }
+  .dir-a2 .delete-btn { opacity: 0; border: none; background: none; color: #C4A97D; font-size: 18px; cursor: pointer; padding: 4px 8px; transition: opacity 0.1s; }
+  .dir-a2 .task-item:hover .delete-btn,
+  .dir-a2 .task-item:focus-within .delete-btn { opacity: 1; }
+  .dir-a2 .delete-btn:focus-visible { opacity: 1; outline: 2px solid #F5A623; outline-offset: 1px; border-radius: 4px; }
+  .dir-a2 .error-msg { font-size: 13px; color: #D32F2F; padding: 2px 12px 0 48px; }
+
+  /* === Empty state (placeholder-only, no ghost task) === */
+
+  /* === Honeycomb checkbox === */
+  .hex-checkbox { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; position: relative; }
+  .hex-checkbox svg.hex-shape { width: 24px; height: 24px; }
+  .hex-checkbox svg.hex-check { position: absolute; width: 13px; height: 13px; opacity: 0; transition: opacity 0.1s; }
+  .task-item.done .hex-checkbox svg.hex-check { opacity: 1; }
+  .check-icon { stroke: #fff; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .hex-empty { fill: #FFF5E5; stroke: #D4B87A; stroke-width: 1.5; transition: all 0.15s; }
+  .task-item.done .hex-empty { fill: #F5A623; stroke: #E8960F; }
+
+  /* === Focus visible — amber instead of browser blue === */
+  .dir-a2 .task-item:focus-visible { outline: 2px solid #F5A623; outline-offset: 2px; border-radius: 8px; background: #FFF0D6; }
+  .dir-a2 .task-item:focus-visible .delete-btn { opacity: 1; }
+  .dir-a2 .task-item:focus-visible .hex-empty { fill: #FFE8B8; stroke: #F5A623; stroke-width: 2; }
+  .dir-a2 .input-area input:focus-visible { outline: none; border-color: #F5A623; box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.25); }
+
+  /* Suppress focus on static contrast comparison inputs */
+  #section-contrast input[readonly] { pointer-events: none; tabindex: -1; }
+  #section-contrast input[readonly]:focus, #section-contrast input[readonly]:focus-visible { outline: none; box-shadow: none; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>todo — A2 Final Direction</h1>
+  <button class="active" onclick="show('mobile')">Mobile</button>
+  <button onclick="show('empty')">Empty State</button>
+  <button onclick="show('desktop')">Desktop</button>
+  <button onclick="show('addbutton')">Add Button</button>
+  <button onclick="show('loading')">Loading State</button>
+  <button onclick="show('contrast')">Contrast Check</button>
+  <div class="hint">Click or Space/Enter to toggle tasks. Tab through items — focus shows amber ring + delete button. Delete/Backspace removes focused task.</div>
+</div>
+
+<!-- === MOBILE WITH TASKS === -->
+<div id="section-mobile" class="mockup-section active">
+  <div class="mockup-label">A2: Mobile — Tasks View<span>Standard view with 8 tasks, some completed</span></div>
+  <div class="phone-frame">
+    <div class="dir-a2">
+      <div class="app-container">
+        <div class="bee-header">
+          <svg class="bee-icon" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#FFD54F"/><rect x="36" y="32" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="44" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="56" width="28" height="6" rx="3" fill="#3D2E1F"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(-30 34 28)"/><ellipse cx="66" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(30 66 28)"/><circle cx="42" cy="40" r="3" fill="#3D2E1F"/><circle cx="58" cy="40" r="3" fill="#3D2E1F"/><path d="M44 50 Q50 55 56 50" stroke="#3D2E1F" stroke-width="2" fill="none"/></svg>
+          <h2>my todos</h2>
+        </div>
+        <div class="input-area">
+          <input type="text" placeholder="add a task..." readonly>
+        </div>
+        <div class="task-list" id="list-mobile"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup-notes">
+    <strong>Mobile tasks view:</strong> Core experience — bee, input, list. Honeycomb hexes have pale honey fill when unchecked and bold amber when done. Click tasks to see the state change. Note the contrast difference between unchecked (#FFF5E5 + #D4B87A border) and checked (#F5A623 solid + white check icon).
+  </div>
+</div>
+
+<!-- === EMPTY STATE === -->
+<div id="section-empty" class="mockup-section">
+  <div class="mockup-label">A2: Empty State — First Visit<span>No tasks yet. Placeholder does all the teaching.</span></div>
+  <div class="phone-frame">
+    <div class="dir-a2" style="min-height: 500px;">
+      <div class="app-container">
+        <div class="bee-header">
+          <svg class="bee-icon" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#FFD54F"/><rect x="36" y="32" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="44" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="56" width="28" height="6" rx="3" fill="#3D2E1F"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(-30 34 28)"/><ellipse cx="66" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(30 66 28)"/><circle cx="42" cy="40" r="3" fill="#3D2E1F"/><circle cx="58" cy="40" r="3" fill="#3D2E1F"/><path d="M44 50 Q50 55 56 50" stroke="#3D2E1F" stroke-width="2" fill="none"/></svg>
+          <h2>my todos</h2>
+        </div>
+        <div class="input-area">
+          <input type="text" placeholder="type a task, press enter..." readonly>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup-notes">
+    <strong>Empty state:</strong> First visit — no tasks yet. The input placeholder "type a task, press enter..." is the only instruction needed. Bee + title + input — that's it. The emptiness itself communicates "nothing here yet." No ghost task, no extra UI. Radically simple.
+  </div>
+</div>
+
+<!-- === DESKTOP: Honey Oak #C9A96E === -->
+<div id="section-desktop" class="mockup-section">
+  <div class="mockup-label">A2: Desktop — 560px Card on Honey Oak<span>Card floats on #C9A96E background with bumped shadow</span></div>
+  <div class="desktop-frame">
+    <div class="desktop-titlebar">
+      <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+      <div class="url">localhost:5173</div>
+    </div>
+    <div class="desktop-bg" style="background: #C9A96E;">
+      <div class="dir-a2 card-style" style="max-width: 560px;">
+        <div class="app-container" style="max-width:100%;">
+          <div class="bee-header">
+            <svg class="bee-icon" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#FFD54F"/><rect x="36" y="32" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="44" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="56" width="28" height="6" rx="3" fill="#3D2E1F"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(-30 34 28)"/><ellipse cx="66" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(30 66 28)"/><circle cx="42" cy="40" r="3" fill="#3D2E1F"/><circle cx="58" cy="40" r="3" fill="#3D2E1F"/><path d="M44 50 Q50 55 56 50" stroke="#3D2E1F" stroke-width="2" fill="none"/></svg>
+            <h2>my todos</h2>
+          </div>
+          <div class="input-area"><input type="text" placeholder="add a task..." readonly></div>
+          <div class="task-list" id="list-desktop"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup-notes"><strong>Desktop (Honey Oak #C9A96E):</strong> 560px card floats on a rich golden background. Bumped shadow (0.18/0.10) keeps the card edge crisp. Warm, on-brand, notepad-on-a-honey-oak-desk.</div>
+</div>
+
+<!-- === ADD BUTTON VARIANT === -->
+<div id="section-addbutton" class="mockup-section">
+  <div class="mockup-label">Add Button Variant<span>Enter still works — button is a visual affordance for mouse/touch users</span></div>
+  <div class="phone-frame show-add-btn">
+    <div class="dir-a2">
+      <div class="app-container">
+        <div class="bee-header">
+          <svg class="bee-icon" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#FFD54F"/><rect x="36" y="32" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="44" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="56" width="28" height="6" rx="3" fill="#3D2E1F"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(-30 34 28)"/><ellipse cx="66" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(30 66 28)"/><circle cx="42" cy="40" r="3" fill="#3D2E1F"/><circle cx="58" cy="40" r="3" fill="#3D2E1F"/><path d="M44 50 Q50 55 56 50" stroke="#3D2E1F" stroke-width="2" fill="none"/></svg>
+          <h2>my todos</h2>
+        </div>
+        <div class="input-area">
+          <input type="text" placeholder="add a task..." id="add-btn-input" oninput="updateAddBtn()">
+          <button class="add-btn inactive" id="add-btn-el" aria-label="Add task">+</button>
+        </div>
+        <div class="task-list" id="list-addbutton"></div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup-notes">
+    <strong>Add button variant:</strong> Circular + button appears next to input. Inactive (dimmed) when empty, lights up amber when text is present. Enter key still submits. Button provides a visible tap target for mobile users and a visual cue that "this is how you add." Try typing in the input to see the button activate.
+  </div>
+</div>
+
+<!-- === LOADING STATE === -->
+<div id="section-loading" class="mockup-section">
+  <div class="mockup-label">Loading State<span>Skeleton pulses while tasks load from backend</span></div>
+  <div class="phone-frame">
+    <div class="dir-a2">
+      <div class="app-container">
+        <div class="bee-header">
+          <svg class="bee-icon" viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#FFD54F"/><rect x="36" y="32" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="44" width="28" height="6" rx="3" fill="#3D2E1F"/><rect x="36" y="56" width="28" height="6" rx="3" fill="#3D2E1F"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(-30 34 28)"/><ellipse cx="66" cy="28" rx="14" ry="8" fill="#A9FAFA" opacity="0.7" transform="rotate(30 66 28)"/><circle cx="42" cy="40" r="3" fill="#3D2E1F"/><circle cx="58" cy="40" r="3" fill="#3D2E1F"/><path d="M44 50 Q50 55 56 50" stroke="#3D2E1F" stroke-width="2" fill="none"/></svg>
+          <h2>my todos</h2>
+        </div>
+        <div class="input-area">
+          <input type="text" placeholder="add a task..." readonly>
+        </div>
+        <div class="task-list" style="padding: 0 20px 20px;">
+          <div class="skeleton-item"><div class="skeleton-hex"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7"/></svg></div><div class="skeleton-text w70"></div></div>
+          <div class="skeleton-item" style="animation-delay: 0.15s;"><div class="skeleton-hex" style="animation-delay: 0.15s;"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7"/></svg></div><div class="skeleton-text w50" style="animation-delay: 0.15s;"></div></div>
+          <div class="skeleton-item" style="animation-delay: 0.3s;"><div class="skeleton-hex" style="animation-delay: 0.3s;"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7"/></svg></div><div class="skeleton-text w85" style="animation-delay: 0.3s;"></div></div>
+          <div class="skeleton-item" style="animation-delay: 0.45s;"><div class="skeleton-hex" style="animation-delay: 0.45s;"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7"/></svg></div><div class="skeleton-text w40" style="animation-delay: 0.45s;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mockup-notes">
+    <strong>Loading state:</strong> Skeleton placeholders pulse while tasks load from the backend. Bee header and input render immediately (no skeleton for those). The skeleton shapes mirror the real task layout — hex + text line — so the transition to real content feels seamless. For this app, loading should be near-instant, but the skeleton prevents a blank flash on slow connections.
+  </div>
+</div>
+
+<!-- === CONTRAST COMPARISON === -->
+<div id="section-contrast" class="mockup-section">
+  <div class="mockup-label">Contrast Check: Current vs WCAG AA Compliant<span>4 tokens fail — side-by-side comparison on #FFF8EE background</span></div>
+
+  <div style="max-width: 900px; margin: 0 auto; padding: 0 20px;">
+
+    <!-- Comparison grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+
+      <!-- CURRENT (failing) -->
+      <div style="background: #FFF8EE; border-radius: 16px; padding: 24px; border: 2px solid #D32F2F;">
+        <h3 style="color: #3D2E1F; font-size: 20px; margin-bottom: 4px;">Current (Failing)</h3>
+        <p style="color: #D32F2F; font-size: 13px; margin-bottom: 20px;">4 tokens below WCAG AA minimums</p>
+
+        <!-- Placeholder -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-placeholder #C4A97D · 2.13:1 (needs 4.5:1)</div>
+          <input type="text" readonly tabindex="-1" style="width: 100%; font-family: 'Patrick Hand', cursive; font-size: 18px; padding: 10px 14px; border: 2px solid #E8D5B5; border-radius: 10px; background: #FFF; color: #C4A97D;" value="type a task, press enter...">
+        </div>
+
+        <!-- Done text -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-done-text #B8A68E · 2.23:1 (needs 4.5:1)</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #FFF8EE;">
+            <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" fill="#F5A623" stroke="#E8960F" stroke-width="1.5"/></svg>
+            <span style="font-family: 'Patrick Hand', cursive; font-size: 18px; color: #B8A68E; text-decoration: line-through;">Buy cat food</span>
+          </div>
+        </div>
+
+        <!-- Input border -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-input-border #E8D5B5 · 1.36:1 (needs 3:1)</div>
+          <input type="text" readonly tabindex="-1" style="width: 100%; font-family: 'Patrick Hand', cursive; font-size: 18px; padding: 10px 14px; border: 2px solid #E8D5B5; border-radius: 10px; background: #FFF; color: #3D2E1F;" value="add a task...">
+        </div>
+
+        <!-- Hex stroke -->
+        <div>
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-hex-stroke #D4B87A · 1.81:1 (needs 3:1)</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #FFF8EE;">
+            <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" fill="#FFF5E5" stroke="#D4B87A" stroke-width="1.5"/></svg>
+            <span style="font-family: 'Patrick Hand', cursive; font-size: 18px; color: #3D2E1F;">Water the plants</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCESSIBLE (passing) -->
+      <div style="background: #FFF8EE; border-radius: 16px; padding: 24px; border: 2px solid #28c840;">
+        <h3 style="color: #3D2E1F; font-size: 20px; margin-bottom: 4px;">Accessible (Passing)</h3>
+        <p style="color: #28c840; font-size: 13px; margin-bottom: 20px;">All tokens meet or exceed WCAG AA</p>
+
+        <!-- Placeholder -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-placeholder #826B4F · 4.77:1 ✓</div>
+          <input type="text" readonly tabindex="-1" style="width: 100%; font-family: 'Patrick Hand', cursive; font-size: 18px; padding: 10px 14px; border: 2px solid #A08862; border-radius: 10px; background: #FFF; color: #826B4F;" value="type a task, press enter...">
+        </div>
+
+        <!-- Done text -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-done-text #7A6D5B · 4.76:1 ✓</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #FFF8EE;">
+            <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" fill="#F5A623" stroke="#E8960F" stroke-width="1.5"/></svg>
+            <span style="font-family: 'Patrick Hand', cursive; font-size: 18px; color: #7A6D5B; text-decoration: line-through;">Buy cat food</span>
+          </div>
+        </div>
+
+        <!-- Input border -->
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-input-border #A08862 · 3.20:1 ✓</div>
+          <input type="text" readonly tabindex="-1" style="width: 100%; font-family: 'Patrick Hand', cursive; font-size: 18px; padding: 10px 14px; border: 2px solid #A08862; border-radius: 10px; background: #FFF; color: #3D2E1F;" value="add a task...">
+        </div>
+
+        <!-- Hex stroke -->
+        <div>
+          <div style="font-size: 12px; color: #3D2E1F; margin-bottom: 4px; font-family: monospace;">--color-hex-stroke #9A8250 · 3.48:1 ✓</div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: #FFF8EE;">
+            <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="12,2 22,7 22,17 12,22 2,17 2,7" fill="#FFF5E5" stroke="#9A8250" stroke-width="1.5"/></svg>
+            <span style="font-family: 'Patrick Hand', cursive; font-size: 18px; color: #3D2E1F;">Water the plants</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full passing token table -->
+    <div style="background: #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="color: #f5a623; font-size: 16px; margin-bottom: 12px;">Full Token Audit</h3>
+      <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+        <tr style="color: #888; border-bottom: 1px solid #444;">
+          <th style="text-align: left; padding: 6px 8px;">Token</th>
+          <th style="text-align: left; padding: 6px 8px;">Current</th>
+          <th style="text-align: left; padding: 6px 8px;">Ratio</th>
+          <th style="text-align: left; padding: 6px 8px;">Proposed</th>
+          <th style="text-align: left; padding: 6px 8px;">New Ratio</th>
+          <th style="text-align: left; padding: 6px 8px;">Req</th>
+        </tr>
+        <tr style="color: #ff6b6b;">
+          <td style="padding: 6px 8px;">--color-placeholder</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#C4A97D;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#C4A97D</td>
+          <td style="padding: 6px 8px;">2.13:1</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#826B4F;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#826B4F</td>
+          <td style="padding: 6px 8px;">4.77:1 ✓</td>
+          <td style="padding: 6px 8px;">4.5:1</td>
+        </tr>
+        <tr style="color: #ff6b6b;">
+          <td style="padding: 6px 8px;">--color-done-text</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#B8A68E;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#B8A68E</td>
+          <td style="padding: 6px 8px;">2.23:1</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#7A6D5B;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#7A6D5B</td>
+          <td style="padding: 6px 8px;">4.76:1 ✓</td>
+          <td style="padding: 6px 8px;">4.5:1</td>
+        </tr>
+        <tr style="color: #ff6b6b;">
+          <td style="padding: 6px 8px;">--color-input-border</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#E8D5B5;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#E8D5B5</td>
+          <td style="padding: 6px 8px;">1.36:1</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#A08862;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#A08862</td>
+          <td style="padding: 6px 8px;">3.20:1 ✓</td>
+          <td style="padding: 6px 8px;">3:1</td>
+        </tr>
+        <tr style="color: #ff6b6b;">
+          <td style="padding: 6px 8px;">--color-hex-stroke</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#D4B87A;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#D4B87A</td>
+          <td style="padding: 6px 8px;">1.81:1</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#9A8250;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#9A8250</td>
+          <td style="padding: 6px 8px;">3.48:1 ✓</td>
+          <td style="padding: 6px 8px;">3:1</td>
+        </tr>
+        <tr style="color: #6bff6b;">
+          <td style="padding: 6px 8px;">--color-text</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#3D2E1F;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#3D2E1F</td>
+          <td style="padding: 6px 8px;" colspan="2">12.38:1 ✓</td>
+          <td style="padding: 6px 8px;">No change</td>
+          <td style="padding: 6px 8px;">4.5:1</td>
+        </tr>
+        <tr style="color: #6bff6b;">
+          <td style="padding: 6px 8px;">--color-error</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#D32F2F;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#D32F2F</td>
+          <td style="padding: 6px 8px;" colspan="2">4.73:1 ✓</td>
+          <td style="padding: 6px 8px;">No change</td>
+          <td style="padding: 6px 8px;">4.5:1</td>
+        </tr>
+        <tr style="color: #6bff6b;">
+          <td style="padding: 6px 8px;">--color-accent</td>
+          <td style="padding: 6px 8px;"><span style="display:inline-block;width:12px;height:12px;background:#F5A623;border-radius:2px;vertical-align:middle;margin-right:4px;"></span>#F5A623</td>
+          <td style="padding: 6px 8px;" colspan="2">2.67:1 (non-text OK as UI element, 3:1 met with white check)</td>
+          <td style="padding: 6px 8px;">No change</td>
+          <td style="padding: 6px 8px;">3:1</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="mockup-notes" style="max-width: 100%;">
+      <strong>What changed:</strong> All 4 proposed replacements stay in the warm honey/brown family — just darker to meet contrast. The placeholder and done text are noticeably more readable. The input border and hex stroke are more defined but still soft. The overall warmth is preserved.<br><br>
+      <strong>Tokens that already pass:</strong> --color-text (12.38:1), --color-error (4.73:1), --color-accent (used on filled hex with white check icon — passes against white).
+    </div>
+  </div>
+</div>
+
+<script>
+const tasks = [
+  { text: "Review pull request for auth module", done: false },
+  { text: "Buy cat food", done: true },
+  { text: "Book dentist appointment", done: false },
+  { text: "Finish the UX design spec", done: true },
+  { text: "Reply to Jess about Friday — she needs to know if we're bringing anything or if she's sorting food for everyone", done: false },
+  { text: "Water the plants", done: false },
+  { text: "Update project dependencies and check if the new React version breaks anything in the build pipeline", done: true },
+  { text: "Prep for standup tomorrow", done: false },
+  { text: "Call the vet about Monty's medication — ask about the new dosage and whether we still need the follow-up appointment next Thursday", done: false },
+  { text: "Fix the leaky tap in the kitchen", done: true },
+];
+
+function hexSvg() {
+  return `<svg class="hex-shape" viewBox="0 0 24 24">
+    <polygon class="hex-empty" points="12,2 22,7 22,17 12,22 2,17 2,7"/>
+  </svg>
+  <svg class="hex-check" viewBox="0 0 24 24">
+    <polyline class="check-icon" points="6,12 10,17 18,7"/>
+  </svg>`;
+}
+
+function renderList(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  tasks.forEach((task) => {
+    const div = document.createElement('div');
+    div.className = 'task-item' + (task.done ? ' done' : '');
+    // Proper ARIA: role=checkbox with aria-checked
+    div.setAttribute('role', 'checkbox');
+    div.setAttribute('aria-checked', task.done ? 'true' : 'false');
+    div.setAttribute('tabindex', '0');
+    div.innerHTML = `
+      <div class="hex-checkbox" aria-hidden="true">${hexSvg()}</div>
+      <span class="task-text">${task.text}</span>
+      <button class="delete-btn" aria-label="Delete task">\u2715</button>
+    `;
+    div.addEventListener('click', () => {
+      const isDone = div.classList.toggle('done');
+      div.setAttribute('aria-checked', isDone ? 'true' : 'false');
+    });
+    div.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        div.click();
+      }
+      if (e.key === 'Delete' || e.key === 'Backspace') {
+        e.preventDefault();
+        div.style.opacity = '0';
+        div.style.transform = 'translateX(20px)';
+        div.style.transition = 'opacity 0.2s, transform 0.2s';
+        setTimeout(() => div.remove(), 200);
+      }
+    });
+    container.appendChild(div);
+  });
+}
+
+function addErrorExample(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const errDiv = document.createElement('div');
+  errDiv.className = 'error-msg';
+  errDiv.setAttribute('role', 'alert');
+  errDiv.textContent = "Couldn't update task. Try again.";
+  const items = container.children;
+  if (items.length >= 3) {
+    items[2].after(errDiv);
+  }
+}
+
+function updateAddBtn() {
+  const input = document.getElementById('add-btn-input');
+  const btn = document.getElementById('add-btn-el');
+  if (input.value.trim().length > 0) {
+    btn.classList.remove('inactive');
+    btn.classList.add('active');
+    btn.disabled = false;
+  } else {
+    btn.classList.add('inactive');
+    btn.classList.remove('active');
+    btn.disabled = true;
+  }
+}
+
+['list-mobile', 'list-desktop', 'list-addbutton'].forEach(id => {
+  renderList(id);
+  if (id === 'list-mobile' || id === 'list-addbutton') addErrorExample(id);
+});
+
+function show(dir) {
+  document.querySelectorAll('.mockup-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + dir).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
