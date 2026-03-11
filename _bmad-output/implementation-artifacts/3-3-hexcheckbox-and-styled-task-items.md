@@ -1,6 +1,6 @@
 # Story 3.3: HexCheckbox & Styled Task Items
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -30,59 +30,51 @@ so that interacting with my tasks feels distinctive and satisfying.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `HexCheckbox` component (AC: #1, #2, #3, #8)
-  - [ ] Create `frontend/src/components/HexCheckbox/` with `index.ts`, `HexCheckbox.tsx`, `HexCheckbox.css`, `HexCheckbox.test.tsx`
-  - [ ] Props: `checked: boolean`
-  - [ ] Render an inline SVG hexagon (6-sided polygon)
-  - [ ] Idle state: `fill: var(--color-hex-idle)`, `stroke: var(--color-hex-stroke)`, `stroke-width: 1.5`
-  - [ ] Checked state: `fill: var(--color-accent)`, white checkmark polyline/path inside
-  - [ ] `aria-hidden="true"` — decorative element (toggle handled by parent TaskItem click)
-  - [ ] Size: approximately 24-28px for the hex, fixed and consistent
-  - [ ] `transition: fill 0.15s ease, stroke 0.15s ease` on the polygon
-- [ ] Task 2: Style HexCheckbox SVG (AC: #1, #2, #3)
-  - [ ] SVG hexagon polygon points for a regular hexagon shape
-  - [ ] Checkmark: white polyline or path, visible only when checked
-  - [ ] Checked polygon: `fill: var(--color-accent)`, `stroke: var(--color-accent)`
-  - [ ] Smooth transition between idle and checked fill states
-- [ ] Task 3: Integrate HexCheckbox into TaskItem (AC: #1, #2, #3)
-  - [ ] Import and render `HexCheckbox` as first child in the task item row
-  - [ ] Pass `checked={todo.isCompleted}` prop
-  - [ ] Layout: HexCheckbox (fixed size) | text (flex: 1) | DeleteButton (fixed size)
-  - [ ] HexCheckbox must not shrink: `flex-shrink: 0`
-- [ ] Task 4: Style task item hover state (AC: #4)
-  - [ ] `.task-item:hover`: `background: var(--color-hover)`
-  - [ ] Add `border-radius: 8px` on hover for soft edges (or always applied)
-  - [ ] `transition: background 0.15s ease` on `.task-item`
-  - [ ] Add padding to `.task-item` for hover background visibility
-- [ ] Task 5: Style delete button hide/reveal on hover (AC: #4, #5)
-  - [ ] Default: `.delete-button` has `opacity: 0` (hidden)
-  - [ ] On task hover: `.task-item:hover .delete-button, .task-item:focus-within .delete-button` → `opacity: 0.6`
-  - [ ] On delete button hover: `.delete-button:hover` → `opacity: 1`
-  - [ ] Transition: `opacity 0.15s ease` (already exists on DeleteButton)
-  - [ ] On touch devices: delete button becomes visible via sticky `:hover` after tap
-- [ ] Task 6: Add delete slide-out animation (AC: #6)
-  - [ ] When `.task-item--deleting` is applied: `opacity: 0`, `transform: translateX(20px)`, `transition: opacity 0.2s ease, transform 0.2s ease`
-  - [ ] This replaces the current simple `opacity: 0.5` deleting style
-- [ ] Task 7: Add `prefers-reduced-motion` support (AC: #7)
-  - [ ] Add to `index.css` (global):
-    ```css
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        transition-duration: 0.01s !important;
-        animation-duration: 0.01s !important;
-      }
-    }
-    ```
-  - [ ] This is a blanket override — all transitions become effectively instant
-- [ ] Task 8: Create `HexCheckbox.test.tsx` (AC: #8)
-  - [ ] Test: renders SVG element with hexagon polygon
-  - [ ] Test: unchecked state — polygon has idle fill class/attribute
-  - [ ] Test: checked state — shows checkmark element and accent fill
-- [ ] Task 9: Update `TaskItem.test.tsx` with visual styling tests (AC: #8)
-  - [ ] Test: completed task shows strikethrough and `--color-done-text` (may already exist from Story 2.2)
-  - [ ] Test: renders HexCheckbox component
-  - [ ] Test: HexCheckbox shows checked state when todo is completed
-- [ ] Task 10: Verify all existing tests still pass (regression check)
+- [x] Task 1: Create `HexCheckbox` component (AC: #1, #2, #3, #8)
+  - [x] Create `frontend/src/components/HexCheckbox/` with `index.ts`, `HexCheckbox.tsx`, `HexCheckbox.css`, `HexCheckbox.test.tsx`
+  - [x] Props: `checked: boolean`
+  - [x] Render an inline SVG hexagon (6-sided polygon)
+  - [x] Idle state: `fill: var(--color-hex-idle)`, `stroke: var(--color-hex-stroke)`, `stroke-width: 1.5`
+  - [x] Checked state: `fill: var(--color-accent)`, white checkmark polyline/path inside
+  - [x] `aria-hidden="true"` — decorative element (toggle handled by parent TaskItem click)
+  - [x] Size: approximately 24-28px for the hex, fixed and consistent
+  - [x] `transition: fill 0.15s ease, stroke 0.15s ease` on the polygon
+- [x] Task 2: Style HexCheckbox SVG (AC: #1, #2, #3)
+  - [x] SVG hexagon polygon points for a regular hexagon shape
+  - [x] Checkmark: white polyline or path, visible only when checked
+  - [x] Checked polygon: `fill: var(--color-accent)`, `stroke: var(--color-accent)`
+  - [x] Smooth transition between idle and checked fill states
+- [x] Task 3: Integrate HexCheckbox into TaskItem (AC: #1, #2, #3)
+  - [x] Import and render `HexCheckbox` as first child in the task item row
+  - [x] Pass `checked={todo.isCompleted}` prop
+  - [x] Layout: HexCheckbox (fixed size) | text (flex: 1) | DeleteButton (fixed size)
+  - [x] HexCheckbox must not shrink: `flex-shrink: 0`
+- [x] Task 4: Style task item hover state (AC: #4)
+  - [x] `.task-item:hover`: `background: var(--color-hover)`
+  - [x] Add `border-radius: 8px` on hover for soft edges (always applied)
+  - [x] `transition: background 0.15s ease` on `.task-item`
+  - [x] Add padding to `.task-item` for hover background visibility
+- [x] Task 5: Style delete button hide/reveal on hover (AC: #4, #5)
+  - [x] Default: `.delete-button` has `opacity: 0` (hidden)
+  - [x] On task hover: `.task-item:hover .delete-button, .task-item:focus-within .delete-button` → `opacity: 0.6`
+  - [x] On delete button hover: `.delete-button:hover` → `opacity: 1`
+  - [x] Transition: `opacity 0.15s ease` (already exists on DeleteButton)
+  - [x] On touch devices: delete button becomes visible via sticky `:hover` after tap
+- [x] Task 6: Add delete slide-out animation (AC: #6)
+  - [x] When `.task-item--deleting` is applied: `opacity: 0`, `transform: translateX(20px)`, `transition: opacity 0.2s ease, transform 0.2s ease`
+  - [x] This replaces the current simple `opacity: 0.5` deleting style
+- [x] Task 7: Add `prefers-reduced-motion` support (AC: #7)
+  - [x] Added blanket override to `index.css`: `transition-duration: 0.01s !important; animation-duration: 0.01s !important`
+  - [x] This is a blanket override — all transitions become effectively instant
+- [x] Task 8: Create `HexCheckbox.test.tsx` (AC: #8)
+  - [x] Test: renders SVG element with hexagon polygon
+  - [x] Test: unchecked state — polygon has idle fill class/attribute
+  - [x] Test: checked state — shows checkmark element and accent fill
+- [x] Task 9: Update `TaskItem.test.tsx` with visual styling tests (AC: #8)
+  - [x] Test: completed task shows strikethrough and `--color-done-text` (already exists from Story 2.2)
+  - [x] Test: renders HexCheckbox component
+  - [x] Test: HexCheckbox shows checked state when todo is completed
+- [x] Task 10: Verify all existing tests still pass (regression check)
 
 ## Dev Notes
 
@@ -331,10 +323,37 @@ it('checked state shows checkmark and accent fill', () => {
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+No issues encountered.
+
 ### Completion Notes List
 
+- HexCheckbox: inline SVG 28x28 with flat-top hexagon polygon and white checkmark polyline, `aria-hidden="true"`
+- Idle state uses `var(--color-hex-idle)` fill / `var(--color-hex-stroke)` stroke; checked uses `var(--color-accent)` for both
+- Checkmark opacity transitions from 0 to 1 on checked state (0.15s ease)
+- Integrated HexCheckbox as first child in TaskItem row: HexCheckbox | text (flex:1) | DeleteButton
+- TaskItem hover: `background: var(--color-hover)` with `border-radius: 8px` and padding for visual hover area
+- Delete button: hidden by default (`opacity: 0`), revealed on `.task-item:hover` and `.task-item:focus-within` at `opacity: 0.6`
+- Delete slide-out: upgraded from simple `opacity: 0.5` to `opacity: 0 + translateX(20px)` with 0.2s ease
+- Added `prefers-reduced-motion: reduce` blanket rule in index.css — all transitions/animations set to 0.01s
+- Tests: 3 HexCheckbox tests (SVG, unchecked, checked), 3 new TaskItem tests (renders hex, checked state, unchecked state)
+- All 84 tests passing (55 frontend + 29 backend), 0 regressions
+
 ### File List
+
+- frontend/src/components/HexCheckbox/HexCheckbox.tsx (new)
+- frontend/src/components/HexCheckbox/HexCheckbox.css (new)
+- frontend/src/components/HexCheckbox/HexCheckbox.test.tsx (new)
+- frontend/src/components/HexCheckbox/index.ts (new)
+- frontend/src/components/TaskItem/TaskItem.tsx (modified — added HexCheckbox)
+- frontend/src/components/TaskItem/TaskItem.css (modified — hover, padding, border-radius, slide-out)
+- frontend/src/components/TaskItem/TaskItem.test.tsx (modified — 3 new HexCheckbox tests)
+- frontend/src/components/DeleteButton/DeleteButton.css (modified — hide/reveal on hover)
+- frontend/src/index.css (modified — prefers-reduced-motion)
+
+### Change Log
+
+- 2026-03-11: Code review — Fixed DeleteButton disabled opacity leak: scoped `opacity: 0.3` to hover/focus-within context only, so disabled button stays hidden (opacity: 0) when not hovered (AC #5 compliance); removed trivially-true `.hex-checkmark` assertion from HexCheckbox checked test (element always in DOM); LOW: `stroke="white"` in HexCheckbox SVG noted as hardcoded color keyword (no token exists for white)

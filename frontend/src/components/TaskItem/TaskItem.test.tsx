@@ -71,4 +71,23 @@ describe('TaskItem', () => {
     expect(textEl).toBeTruthy();
     expect(textEl?.textContent).toHaveLength(500);
   });
+
+  it('renders HexCheckbox component', () => {
+    const { container } = render(<TaskItem {...defaultProps} />);
+    expect(container.querySelector('.hex-checkbox')).toBeTruthy();
+    expect(container.querySelector('polygon')).toBeTruthy();
+  });
+
+  it('HexCheckbox shows checked state when todo is completed', () => {
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    const { container } = render(
+      <TaskItem {...defaultProps} todo={completedTodo} />,
+    );
+    expect(container.querySelector('.hex-checkbox--checked')).toBeTruthy();
+  });
+
+  it('HexCheckbox shows unchecked state when todo is incomplete', () => {
+    const { container } = render(<TaskItem {...defaultProps} />);
+    expect(container.querySelector('.hex-checkbox--checked')).toBeNull();
+  });
 });

@@ -7,8 +7,13 @@
   line-height: 1;
   padding: 0.25rem;
   color: var(--color-text, #3D2E1F);
-  opacity: 0.6;
+  opacity: 0;
   transition: opacity 0.15s ease;
+}
+
+.task-item:hover .delete-button,
+.task-item:focus-within .delete-button {
+  opacity: 0.6;
 }
 
 .delete-button:hover:not(:disabled) {
@@ -17,5 +22,9 @@
 
 .delete-button:disabled {
   cursor: not-allowed;
+}
+
+.task-item:hover .delete-button:disabled,
+.task-item:focus-within .delete-button:disabled {
   opacity: 0.3;
 }

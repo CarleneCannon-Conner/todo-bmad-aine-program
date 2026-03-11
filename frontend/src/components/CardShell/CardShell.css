@@ -1,0 +1,17 @@
+.card-shell {
+  background: var(--color-background);
+  min-height: 100vh;
+  padding: 1rem 1rem 2rem;
+}
+
+@media (min-width: 768px) {
+  .card-shell {
+    max-width: 560px;
+    margin: 2rem auto;
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(61, 46, 31, 0.18),
+                0 1px 4px rgba(61, 46, 31, 0.10);
+    min-height: auto;
+    padding: 1.5rem 2rem 2rem;
+  }
+}

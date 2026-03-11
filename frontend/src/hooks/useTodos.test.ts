@@ -191,6 +191,38 @@ describe('useTodos', () => {
     expect(mockDeleteTodo).toHaveBeenCalledWith('1');
   });
 
+  it('optimistic delete reverts on API failure (rollbackOnError)', async () => {
+    const initialTodos = [
+      { id: '1', text: 'Delete me', isCompleted: false, createdAt: new Date() },
+      { id: '2', text: 'Keep me', isCompleted: false, createdAt: new Date() },
+    ];
+
+    mockFetchTodos.mockResolvedValue(initialTodos);
+    mockDeleteTodo.mockRejectedValue(new Error('Network error'));
+
+    const { result } = renderHook(() => useTodos(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.todos).toHaveLength(2);
+    });
+
+    mockFetchTodos.mockResolvedValue(initialTodos);
+
+    await act(async () => {
+      try {
+        await result.current.deleteTodo('1');
+      } catch {
+        // SWR may propagate the error
+      }
+    });
+
+    // After rollback, both todos should reappear
+    await waitFor(() => {
+      expect(result.current.todos).toHaveLength(2);
+      expect(result.current.todos[0].id).toBe('1');
+    });
+  });
+
   it('optimistic delete removes todo from list before API resolves', async () => {
     const initialTodos = [
       { id: '1', text: 'Delete me', isCompleted: false, createdAt: new Date() },

@@ -8,6 +8,7 @@ interface DeleteButtonProps {
 export function DeleteButton({ onDelete, disabled }: DeleteButtonProps) {
   return (
     <button
+      type="button"
       className="delete-button"
       onClick={(e) => {
         e.stopPropagation();

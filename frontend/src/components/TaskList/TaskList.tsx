@@ -1,5 +1,6 @@
 import type { Todo } from '@todo/shared';
 import { TaskItem } from '../TaskItem';
+import { LoadingSkeleton } from '../LoadingSkeleton';
 import './TaskList.css';
 
 interface TaskListProps {
@@ -8,9 +9,18 @@ interface TaskListProps {
   onDelete: (id: string) => void;
   togglingIds: Set<string>;
   deletingIds: Set<string>;
+  isLoading: boolean;
 }
 
-export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds }: TaskListProps) {
+export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds, isLoading }: TaskListProps) {
+  if (isLoading && todos.length === 0) {
+    return <LoadingSkeleton />;
+  }
+
+  if (todos.length === 0) {
+    return null;
+  }
+
   return (
     <ul className="task-list">
       {todos.map((todo) => (

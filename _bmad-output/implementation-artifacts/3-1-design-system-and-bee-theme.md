@@ -1,6 +1,6 @@
 # Story 3.1: Design System & Bee Theme
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -22,44 +22,44 @@ so that using the app feels personal and enjoyable rather than sterile.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Replace `index.css` with design system foundation (AC: #1, #2)
-  - [ ] Remove all Vite default styles (dark theme, color-scheme, Inter font)
-  - [ ] Define all 12 CSS custom properties in `:root`
-  - [ ] Set `body` background to `var(--color-background)`
-  - [ ] Set `body` color to `var(--color-text)`
-  - [ ] Add global resets: `margin: 0`, `box-sizing: border-box`, sensible defaults
-  - [ ] Set `font-family: 'Patrick Hand', cursive, sans-serif`
-  - [ ] Set `line-height: 1.5`
-- [ ] Task 2: Add Patrick Hand font from Google Fonts (AC: #3)
-  - [ ] Add `<link>` tag in `index.html` for Google Fonts: `Patrick Hand` weight 400
-  - [ ] URL: `https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap`
-  - [ ] `display=swap` ensures text is visible while font loads
-- [ ] Task 3: Update `App.css` to use design tokens (AC: #1)
-  - [ ] Replace any hardcoded colours with CSS custom properties
-  - [ ] Adjust layout as needed for the bee theme
-- [ ] Task 4: Update `TaskInput.css` — replace hardcoded colours (AC: #1)
-  - [ ] `border: 1px solid #ccc` → `border: 1px solid var(--color-input-border)`
-  - [ ] `border-color: #666` on focus → `border-color: var(--color-accent)`
-  - [ ] Add `color: var(--color-text)` for input text
-  - [ ] Add `font-family: inherit` so Patrick Hand applies to input
-  - [ ] Add `::placeholder` styles: `color: var(--color-placeholder)`
-- [ ] Task 5: Update `TaskItem.css` — replace hardcoded colours (AC: #1)
-  - [ ] Verify `--color-done-text` already uses `var()` (it does from Story 2.2 — already compliant)
-  - [ ] Add `color: var(--color-text)` as base text colour
-- [ ] Task 6: Update `TaskList.css` — replace hardcoded colours (AC: #1)
-  - [ ] `border-bottom: 1px solid #eee` → `border-bottom: 1px solid var(--color-input-border)`
-- [ ] Task 7: Update any other component CSS files with hardcoded colours (AC: #1)
-  - [ ] Scan all `.css` files in `frontend/src/` for hex values (`#xxx` or `#xxxxxx`)
-  - [ ] Replace each with the appropriate CSS custom property
-  - [ ] AddButton CSS (if created in Story 2.4): update any hardcoded colours
-  - [ ] DeleteButton CSS (if created in Story 2.3): update any hardcoded colours
-- [ ] Task 8: Create design system test (AC: #4)
-  - [ ] Create `frontend/src/design-system.test.ts` (or similar)
-  - [ ] Test: read `index.css` content, verify all 12 `--color-*` properties present
-  - [ ] Test: scan all `.css` files in `components/`, verify no bare hex colour values (regex: `#[0-9a-fA-F]{3,8}` not inside a CSS comment or `var()` fallback)
-  - [ ] Allow hex values inside `var()` fallbacks (e.g., `var(--color-done-text, #B8A68E)` is OK)
-- [ ] Task 9: Verify all existing tests still pass (regression check)
-  - [ ] Existing component tests may reference hardcoded styles — update assertions if needed
+- [x] Task 1: Replace `index.css` with design system foundation (AC: #1, #2)
+  - [x] Remove all Vite default styles (dark theme, color-scheme, Inter font)
+  - [x] Define all 12 CSS custom properties in `:root`
+  - [x] Set `body` background to `var(--color-background)`
+  - [x] Set `body` color to `var(--color-text)`
+  - [x] Add global resets: `margin: 0`, `box-sizing: border-box`, sensible defaults
+  - [x] Set `font-family: 'Patrick Hand', cursive, sans-serif`
+  - [x] Set `line-height: 1.5`
+- [x] Task 2: Add Patrick Hand font from Google Fonts (AC: #3)
+  - [x] Add `<link>` tag in `index.html` for Google Fonts: `Patrick Hand` weight 400
+  - [x] URL: `https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap`
+  - [x] `display=swap` ensures text is visible while font loads
+- [x] Task 3: Update `App.css` to use design tokens (AC: #1)
+  - [x] Replace any hardcoded colours with CSS custom properties
+  - [x] Adjust layout as needed for the bee theme
+- [x] Task 4: Update `TaskInput.css` — replace hardcoded colours (AC: #1)
+  - [x] `border: 1px solid #ccc` → `border: 1px solid var(--color-input-border)`
+  - [x] `border-color: #666` on focus → `border-color: var(--color-accent)`
+  - [x] Add `color: var(--color-text)` for input text
+  - [x] Add `font-family: inherit` so Patrick Hand applies to input
+  - [x] Add `::placeholder` styles: `color: var(--color-placeholder)`
+- [x] Task 5: Update `TaskItem.css` — replace hardcoded colours (AC: #1)
+  - [x] Verify `--color-done-text` already uses `var()` (it does from Story 2.2 — already compliant)
+  - [x] Add `color: var(--color-text)` as base text colour
+- [x] Task 6: Update `TaskList.css` — replace hardcoded colours (AC: #1)
+  - [x] `border-bottom: 1px solid #eee` → `border-bottom: 1px solid var(--color-input-border)`
+- [x] Task 7: Update any other component CSS files with hardcoded colours (AC: #1)
+  - [x] Scan all `.css` files in `frontend/src/` for hex values (`#xxx` or `#xxxxxx`)
+  - [x] Replace each with the appropriate CSS custom property
+  - [x] AddButton CSS (if created in Story 2.4): update any hardcoded colours
+  - [x] DeleteButton CSS (if created in Story 2.3): update any hardcoded colours
+- [x] Task 8: Create design system test (AC: #4)
+  - [x] Create `frontend/src/design-system.test.ts` (or similar)
+  - [x] Test: read `index.css` content, verify all 12 `--color-*` properties present
+  - [x] Test: scan all `.css` files in `components/`, verify no bare hex colour values (regex: `#[0-9a-fA-F]{3,8}` not inside a CSS comment or `var()` fallback)
+  - [x] Allow hex values inside `var()` fallbacks (e.g., `var(--color-done-text, #B8A68E)` is OK)
+- [x] Task 9: Verify all existing tests still pass (regression check)
+  - [x] Existing component tests may reference hardcoded styles — update assertions if needed
 
 ## Dev Notes
 
@@ -269,10 +269,36 @@ When accessibility work begins post-MVP, update 4 tokens:
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+No issues encountered.
+
 ### Completion Notes List
 
+- Replaced Vite default index.css with complete bee theme design system: 12 CSS custom properties in :root, global resets, Patrick Hand font
+- Added Google Fonts preconnect + stylesheet links in index.html for Patrick Hand with display=swap
+- App.css already had no hardcoded colours — no changes needed beyond existing input-area styles
+- TaskInput.css: replaced #ccc → var(--color-input-border), #666 → var(--color-accent), added ::placeholder and color tokens
+- TaskItem.css: added var(--color-text) base colour; --color-done-text already compliant with var() fallback
+- TaskList.css: replaced #eee → var(--color-input-border)
+- AddButton.css: replaced #ddd → var(--color-input-border), #aaa → var(--color-placeholder) for disabled state
+- DeleteButton.css: already fully compliant with var() usage
+- Created design-system.test.ts with 2 tests: token presence verification and component CSS hex audit (allows var() fallbacks)
+- All 69 tests passing (40 frontend + 29 backend), 0 regressions
+- font-family: inherit added to input/button/textarea in global reset (index.css), so TaskInput inherits Patrick Hand without needing its own font-family declaration
+
 ### File List
+
+- frontend/src/index.css (modified — complete rewrite)
+- frontend/index.html (modified — Google Fonts links)
+- frontend/src/components/TaskInput/TaskInput.css (modified — design tokens)
+- frontend/src/components/TaskItem/TaskItem.css (modified — added base text colour)
+- frontend/src/components/TaskList/TaskList.css (modified — design token)
+- frontend/src/components/AddButton/AddButton.css (modified — design tokens for disabled state)
+- frontend/src/design-system.test.ts (new — design system verification tests)
+
+### Change Log
+
+- 2026-03-11: Code review — Hardened design-system hex scan test to strip CSS comments before checking for bare hex values (prevents false positives from comments like `/* old: #ccc */`); LOW findings documented: `color: white` keyword in AddButton.css is technically a hardcoded color but no token exists for it in the 12-token palette; inconsistent var() fallback strategy across component CSS files (some have fallbacks, some don't)

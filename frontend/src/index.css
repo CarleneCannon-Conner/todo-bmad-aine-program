@@ -1,29 +1,51 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Design tokens — bee theme palette */
+  --color-background: #FFF8EE;
+  --color-accent: #F5A623;
+  --color-text: #3D2E1F;
+  --color-desktop-bg: #C9A96E;
+  --color-error: #D32F2F;
+  --color-hover: #FFF0D6;
+  --color-hex-idle: #FFF5E5;
+  --color-hex-stroke: #D4B87A;
+  --color-hex-focus: #FFE8B8;
+  --color-done-text: #B8A68E;
+  --color-input-border: #E8D5B5;
+  --color-placeholder: #C4A97D;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: 'Patrick Hand', cursive, sans-serif;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-background);
   min-height: 100vh;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+input,
+button,
+textarea {
+  font-family: inherit;
+}
+
+@media (min-width: 768px) {
+  body {
+    background-color: var(--color-desktop-bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01s !important;
+    animation-duration: 0.01s !important;
   }
 }

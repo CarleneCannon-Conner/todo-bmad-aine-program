@@ -1,0 +1,28 @@
+.loading-skeleton {
+  padding: 0;
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-hex {
+  flex-shrink: 0;
+}
+
+.skeleton-text-bar {
+  flex: 1;
+  height: 16px;
+  background: #F0E4D0;
+  border-radius: 4px;
+  max-width: 75%;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

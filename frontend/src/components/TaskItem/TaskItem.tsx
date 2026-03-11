@@ -1,4 +1,5 @@
 import type { Todo } from '@todo/shared';
+import { HexCheckbox } from '../HexCheckbox';
 import { DeleteButton } from '../DeleteButton';
 import './TaskItem.css';
 
@@ -26,6 +27,7 @@ export function TaskItem({ todo, onToggle, onDelete, isToggling, isDeleting }: T
 
   return (
     <div className={className} onClick={handleClick}>
+      <HexCheckbox checked={todo.isCompleted} />
       <span className="task-item-text">{todo.text}</span>
       <DeleteButton onDelete={() => onDelete(todo.id)} disabled={isDeleting || isToggling} />
     </div>

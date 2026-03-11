@@ -1,6 +1,6 @@
 # Story 2.3: Delete Task
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -375,3 +375,7 @@ None — all tests passed on first run.
 - frontend/src/api/todoApi.test.ts (modified — added deleteTodo test suite)
 - frontend/src/components/TaskItem/TaskItem.test.tsx (modified — added delete and long text tests)
 - frontend/src/hooks/useTodos.test.ts (modified — added delete test suite)
+
+### Change Log
+
+- 2026-03-11: Code review — Added delete rollback test verifying optimistic delete reverts on API failure (AC #3); added `type="button"` to DeleteButton for defensive HTML semantics; noted deleteTodo API/hook/API-tests were pre-implemented in Story 2-2 scope creep (documented in 2-2 review)

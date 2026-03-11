@@ -1,0 +1,25 @@
+.hex-checkbox {
+  flex-shrink: 0;
+  display: block;
+}
+
+.hex-polygon {
+  fill: var(--color-hex-idle);
+  stroke: var(--color-hex-stroke);
+  stroke-width: 1.5;
+  transition: fill 0.15s ease, stroke 0.15s ease;
+}
+
+.hex-checkbox--checked .hex-polygon {
+  fill: var(--color-accent);
+  stroke: var(--color-accent);
+}
+
+.hex-checkmark {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.hex-checkbox--checked .hex-checkmark {
+  opacity: 1;
+}
