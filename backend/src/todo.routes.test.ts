@@ -85,6 +85,146 @@ describe('POST /api/todos', () => {
   });
 });
 
+describe('PATCH /api/todos/:id', () => {
+  it('returns 200 with updated todo on toggle to complete', async () => {
+    const createRes = await app.inject({
+      method: 'POST',
+      url: '/api/todos',
+      payload: { text: 'Test toggle' },
+    });
+    const todoId = createRes.json().data.id;
+
+    const patchRes = await app.inject({
+      method: 'PATCH',
+      url: `/api/todos/${todoId}`,
+      payload: { isCompleted: true },
+    });
+
+    expect(patchRes.statusCode).toBe(200);
+    const body = patchRes.json();
+    expect(body.success).toBe(true);
+    expect(body.data.isCompleted).toBe(true);
+    expect(body.data.id).toBe(todoId);
+  });
+
+  it('returns 200 with updated todo on toggle back to incomplete', async () => {
+    const createRes = await app.inject({
+      method: 'POST',
+      url: '/api/todos',
+      payload: { text: 'Test untoggle' },
+    });
+    const todoId = createRes.json().data.id;
+
+    // Toggle to complete
+    await app.inject({
+      method: 'PATCH',
+      url: `/api/todos/${todoId}`,
+      payload: { isCompleted: true },
+    });
+
+    // Toggle back to incomplete
+    const patchRes = await app.inject({
+      method: 'PATCH',
+      url: `/api/todos/${todoId}`,
+      payload: { isCompleted: false },
+    });
+
+    expect(patchRes.statusCode).toBe(200);
+    const body = patchRes.json();
+    expect(body.success).toBe(true);
+    expect(body.data.isCompleted).toBe(false);
+    expect(body.data.id).toBe(todoId);
+  });
+
+  it('returns 404 with NOT_FOUND envelope for missing ID', async () => {
+    const patchRes = await app.inject({
+      method: 'PATCH',
+      url: '/api/todos/00000000-0000-0000-0000-000000000000',
+      payload: { isCompleted: true },
+    });
+
+    expect(patchRes.statusCode).toBe(404);
+    const body = patchRes.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('NOT_FOUND');
+    expect(typeof body.error.message).toBe('string');
+  });
+
+  it('returns 400 with VALIDATION_ERROR for invalid UUID format', async () => {
+    const patchRes = await app.inject({
+      method: 'PATCH',
+      url: '/api/todos/not-a-uuid',
+      payload: { isCompleted: true },
+    });
+
+    expect(patchRes.statusCode).toBe(400);
+    const body = patchRes.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+  });
+
+  it('returns error response in ApiResponse<T> envelope format', async () => {
+    const patchRes = await app.inject({
+      method: 'PATCH',
+      url: '/api/todos/00000000-0000-0000-0000-000000000000',
+      payload: { isCompleted: true },
+    });
+
+    const body = patchRes.json();
+    expect(body).toHaveProperty('success');
+    expect(body).toHaveProperty('error');
+    expect(body.error).toHaveProperty('code');
+    expect(body.error).toHaveProperty('message');
+  });
+});
+
+describe('DELETE /api/todos/:id', () => {
+  it('returns 200 with { id } on success', async () => {
+    const createRes = await app.inject({
+      method: 'POST',
+      url: '/api/todos',
+      payload: { text: 'Test delete' },
+    });
+    const todoId = createRes.json().data.id;
+
+    const deleteRes = await app.inject({
+      method: 'DELETE',
+      url: `/api/todos/${todoId}`,
+    });
+
+    expect(deleteRes.statusCode).toBe(200);
+    const body = deleteRes.json();
+    expect(body.success).toBe(true);
+    expect(body.data).toEqual({ id: todoId });
+  });
+
+  it('returns 404 with NOT_FOUND envelope for missing ID', async () => {
+    const deleteRes = await app.inject({
+      method: 'DELETE',
+      url: '/api/todos/00000000-0000-0000-0000-000000000000',
+    });
+
+    expect(deleteRes.statusCode).toBe(404);
+    const body = deleteRes.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('NOT_FOUND');
+    expect(typeof body.error.message).toBe('string');
+  });
+
+  it('returns error response in ApiResponse<T> envelope format', async () => {
+    const deleteRes = await app.inject({
+      method: 'DELETE',
+      url: '/api/todos/00000000-0000-0000-0000-000000000000',
+    });
+
+    const body = deleteRes.json();
+    expect(body).toHaveProperty('success');
+    expect(body).toHaveProperty('error');
+    expect(body.error).toHaveProperty('code');
+    expect(body.error).toHaveProperty('message');
+  });
+});
+
 describe('GET /api/todos', () => {
   it('returns 200 with empty array when no todos', async () => {
     const response = await app.inject({

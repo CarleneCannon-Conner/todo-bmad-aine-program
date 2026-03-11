@@ -1,21 +1,15 @@
-import { useState } from 'react';
 import './TaskInput.css';
 
 interface TaskInputProps {
-  onSubmit: (text: string) => Promise<void>;
+  value: string;
+  onChange: (text: string) => void;
+  onSubmit: () => void;
 }
 
-export function TaskInput({ onSubmit }: TaskInputProps) {
-  const [text, setText] = useState('');
-
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && text.trim()) {
-      try {
-        await onSubmit(text.trim());
-        setText('');
-      } catch {
-        // Error display handled by Story 4.2
-      }
+export function TaskInput({ value, onChange, onSubmit }: TaskInputProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSubmit();
     }
   };
 
@@ -24,8 +18,8 @@ export function TaskInput({ onSubmit }: TaskInputProps) {
       className="task-input"
       type="text"
       placeholder="add a task..."
-      value={text}
-      onChange={(e) => setText(e.target.value)}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
       onKeyDown={handleKeyDown}
     />
   );

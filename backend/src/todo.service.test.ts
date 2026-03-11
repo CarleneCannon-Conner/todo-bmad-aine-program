@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
-import { listTodos, createTodo, ValidationError } from './todo.service.js';
+import { listTodos, createTodo, toggleTodo, deleteTodo, ValidationError, NotFoundError } from './todo.service.js';
 import { getTestDb, setupTestDb, truncateTodos, teardownTestDb } from './test-helpers.js';
 
 beforeAll(async () => {
@@ -42,6 +42,51 @@ describe('createTodo', () => {
   it('throws ValidationError on whitespace-only string', async () => {
     const db = getTestDb();
     await expect(createTodo(db, '   ')).rejects.toThrow(ValidationError);
+  });
+});
+
+describe('toggleTodo', () => {
+  it('updates isCompleted to true', async () => {
+    const db = getTestDb();
+    const todo = await createTodo(db, 'Test toggle');
+    const updated = await toggleTodo(db, todo.id, true);
+    expect(updated.isCompleted).toBe(true);
+    expect(updated.id).toBe(todo.id);
+    expect(updated.text).toBe('Test toggle');
+  });
+
+  it('updates isCompleted to false (toggle back)', async () => {
+    const db = getTestDb();
+    const todo = await createTodo(db, 'Test toggle back');
+    await toggleTodo(db, todo.id, true);
+    const updated = await toggleTodo(db, todo.id, false);
+    expect(updated.isCompleted).toBe(false);
+  });
+
+  it('throws NotFoundError on non-existent ID', async () => {
+    const db = getTestDb();
+    await expect(
+      toggleTodo(db, '00000000-0000-0000-0000-000000000000', true),
+    ).rejects.toThrow(NotFoundError);
+  });
+});
+
+describe('deleteTodo', () => {
+  it('removes todo from database', async () => {
+    const db = getTestDb();
+    const todo = await createTodo(db, 'Test delete');
+    const result = await deleteTodo(db, todo.id);
+    expect(result).toEqual({ id: todo.id });
+
+    const remaining = await listTodos(db);
+    expect(remaining).toHaveLength(0);
+  });
+
+  it('throws NotFoundError on non-existent ID', async () => {
+    const db = getTestDb();
+    await expect(
+      deleteTodo(db, '00000000-0000-0000-0000-000000000000'),
+    ).rejects.toThrow(NotFoundError);
   });
 });
 

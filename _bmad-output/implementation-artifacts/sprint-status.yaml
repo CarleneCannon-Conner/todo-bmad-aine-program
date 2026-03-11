@@ -47,17 +47,17 @@ development_status:
   1-4-readme-and-developer-setup: done
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-backend-toggle-and-delete-endpoints: backlog
-  2-2-toggle-task-completion: backlog
-  2-3-delete-task: backlog
-  2-4-addbutton-and-input-validation: backlog
+  epic-2: in-progress
+  2-1-backend-toggle-and-delete-endpoints: done
+  2-2-toggle-task-completion: done
+  2-3-delete-task: review
+  2-4-addbutton-and-input-validation: review
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-design-system-and-bee-theme: backlog
-  3-2-beeheader-and-cardshell-layout: backlog
-  3-3-hexcheckbox-and-styled-task-items: backlog
+  epic-3: in-progress
+  3-1-design-system-and-bee-theme: ready-for-dev
+  3-2-beeheader-and-cardshell-layout: ready-for-dev
+  3-3-hexcheckbox-and-styled-task-items: ready-for-dev
   3-4-loading-skeleton-and-empty-state: backlog
   epic-3-retrospective: optional
 

@@ -20,6 +20,22 @@ export async function fetchTodos(): Promise<Todo[]> {
   return handleResponse<Todo[]>(res);
 }
 
+export async function toggleTodo(id: string, isCompleted: boolean): Promise<Todo> {
+  const res = await fetch(`${API_BASE}/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ isCompleted }),
+  });
+  return handleResponse<Todo>(res);
+}
+
+export async function deleteTodo(id: string): Promise<{ id: string }> {
+  const res = await fetch(`${API_BASE}/${id}`, {
+    method: 'DELETE',
+  });
+  return handleResponse<{ id: string }>(res);
+}
+
 export async function createTodo(text: string): Promise<Todo> {
   const res = await fetch(API_BASE, {
     method: 'POST',

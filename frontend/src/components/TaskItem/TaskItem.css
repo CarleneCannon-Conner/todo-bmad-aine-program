@@ -1,3 +1,29 @@
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
 .task-item-text {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
   font-size: 1rem;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.task-item--completed .task-item-text {
+  text-decoration: line-through;
+  color: var(--color-done-text, #B8A68E);
+}
+
+.task-item--toggling {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.task-item--deleting {
+  opacity: 0.5;
+  pointer-events: none;
 }

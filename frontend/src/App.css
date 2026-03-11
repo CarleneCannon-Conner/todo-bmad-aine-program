@@ -7,3 +7,13 @@
 .app h1 {
   margin-bottom: 1rem;
 }
+
+.input-area {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-area .task-input {
+  flex: 1;
+}

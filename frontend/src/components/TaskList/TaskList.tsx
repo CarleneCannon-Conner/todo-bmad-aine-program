@@ -4,14 +4,24 @@ import './TaskList.css';
 
 interface TaskListProps {
   todos: Todo[];
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
+  togglingIds: Set<string>;
+  deletingIds: Set<string>;
 }
 
-export function TaskList({ todos }: TaskListProps) {
+export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds }: TaskListProps) {
   return (
     <ul className="task-list">
       {todos.map((todo) => (
         <li key={todo.id} className="task-list-item">
-          <TaskItem todo={todo} />
+          <TaskItem
+            todo={todo}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            isToggling={togglingIds.has(todo.id)}
+            isDeleting={deletingIds.has(todo.id)}
+          />
         </li>
       ))}
     </ul>

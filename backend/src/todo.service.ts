@@ -1,4 +1,4 @@
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { todos } from '@todo/shared';
 import type { Todo } from '@todo/shared';
@@ -19,9 +19,32 @@ export async function createTodo(db: DB, text: string): Promise<Todo> {
   return todo;
 }
 
+export async function toggleTodo(db: DB, id: string, isCompleted: boolean): Promise<Todo> {
+  const [updated] = await db.update(todos).set({ isCompleted }).where(eq(todos.id, id)).returning();
+  if (!updated) {
+    throw new NotFoundError(`Todo with id ${id} not found`);
+  }
+  return updated;
+}
+
+export async function deleteTodo(db: DB, id: string): Promise<{ id: string }> {
+  const [deleted] = await db.delete(todos).where(eq(todos.id, id)).returning();
+  if (!deleted) {
+    throw new NotFoundError(`Todo with id ${id} not found`);
+  }
+  return { id: deleted.id };
+}
+
 export class ValidationError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'ValidationError';
+  }
+}
+
+export class NotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'NotFoundError';
   }
 }
