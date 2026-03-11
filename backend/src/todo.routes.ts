@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify';
 import { Type } from '@sinclair/typebox';
-import { listTodos, createTodo, toggleTodo, deleteTodo, ValidationError, NotFoundError } from './todo.service.js';
+import { listTodos, createTodo, toggleTodo, deleteTodo } from './todo.service.js';
 import type { ApiResponse, Todo } from '@todo/shared';
 
 const CreateTodoBody = Type.Object({
@@ -51,34 +51,4 @@ export default async function todoRoutes(fastify: FastifyInstance) {
       return reply.status(200).send(response);
     },
   );
-
-  fastify.setErrorHandler(async (error, _request, reply) => {
-    if (error.validation) {
-      const response: ApiResponse<never> = {
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: error.message },
-      };
-      return reply.status(400).send(response);
-    }
-    if (error instanceof ValidationError) {
-      const response: ApiResponse<never> = {
-        success: false,
-        error: { code: 'VALIDATION_ERROR', message: error.message },
-      };
-      return reply.status(400).send(response);
-    }
-    if (error instanceof NotFoundError) {
-      const response: ApiResponse<never> = {
-        success: false,
-        error: { code: 'NOT_FOUND', message: error.message },
-      };
-      return reply.status(404).send(response);
-    }
-    fastify.log.error(error);
-    const response: ApiResponse<never> = {
-      success: false,
-      error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
-    };
-    return reply.status(500).send(response);
-  });
 }

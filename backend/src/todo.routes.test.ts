@@ -8,6 +8,10 @@ let app: FastifyInstance;
 beforeAll(async () => {
   await setupTestDb();
   app = await buildApp({ logger: false });
+  // Test-only route for 500 error testing
+  app.get('/api/test-error', async () => {
+    throw new Error('Unexpected failure');
+  });
   await app.ready();
 });
 
@@ -225,6 +229,50 @@ describe('DELETE /api/todos/:id', () => {
   });
 });
 
+describe('Error handling — unknown routes', () => {
+  it('returns 404 with NOT_FOUND envelope for unknown route', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/unknown',
+    });
+
+    expect(response.statusCode).toBe(404);
+    const body = response.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('NOT_FOUND');
+    expect(body.error.message).toBe('Route not found');
+  });
+
+  it('returns 404 with NOT_FOUND envelope for unknown method on known route', async () => {
+    const response = await app.inject({
+      method: 'PUT',
+      url: '/api/todos',
+    });
+
+    expect(response.statusCode).toBe(404);
+    const body = response.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('NOT_FOUND');
+  });
+});
+
+describe('Error handling — 500 INTERNAL_ERROR', () => {
+  it('returns 500 with INTERNAL_ERROR envelope on unexpected error', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/test-error',
+    });
+
+    expect(response.statusCode).toBe(500);
+    const body = response.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('INTERNAL_ERROR');
+    expect(body.error.message).toBe('Internal server error');
+    // Original error message must NOT be leaked to client
+    expect(body.error.message).not.toContain('Unexpected failure');
+  });
+});
+
 describe('GET /api/todos', () => {
   it('returns 200 with empty array when no todos', async () => {
     const response = await app.inject({
@@ -295,5 +343,51 @@ describe('GET /api/todos', () => {
     expect(body).toHaveProperty('data');
     expect(typeof body.success).toBe('boolean');
     expect(Array.isArray(body.data)).toBe(true);
+  });
+});
+
+describe('ApiResponse<T> envelope consistency', () => {
+  it('every success response has exactly { success: true, data } shape', async () => {
+    // Create a todo to test all success endpoints
+    const createRes = await app.inject({
+      method: 'POST',
+      url: '/api/todos',
+      payload: { text: 'Envelope test' },
+    });
+    const todoId = createRes.json().data.id;
+
+    const successResponses = [
+      createRes, // POST 201
+      await app.inject({ method: 'GET', url: '/api/todos' }), // GET 200
+      await app.inject({ method: 'PATCH', url: `/api/todos/${todoId}`, payload: { isCompleted: true } }), // PATCH 200
+      await app.inject({ method: 'DELETE', url: `/api/todos/${todoId}` }), // DELETE 200
+    ];
+
+    for (const res of successResponses) {
+      const body = res.json();
+      expect(body.success).toBe(true);
+      expect(body).toHaveProperty('data');
+      expect(body).not.toHaveProperty('error');
+    }
+  });
+
+  it('every error response has exactly { success: false, error: { code, message } } shape', async () => {
+    const errorResponses = [
+      await app.inject({ method: 'POST', url: '/api/todos', payload: { text: '' } }), // 400
+      await app.inject({ method: 'PATCH', url: '/api/todos/00000000-0000-0000-0000-000000000000', payload: { isCompleted: true } }), // 404
+      await app.inject({ method: 'DELETE', url: '/api/todos/00000000-0000-0000-0000-000000000000' }), // 404
+      await app.inject({ method: 'GET', url: '/api/unknown' }), // 404 unknown route
+    ];
+
+    for (const res of errorResponses) {
+      const body = res.json();
+      expect(body.success).toBe(false);
+      expect(body).toHaveProperty('error');
+      expect(body.error).toHaveProperty('code');
+      expect(body.error).toHaveProperty('message');
+      expect(typeof body.error.code).toBe('string');
+      expect(typeof body.error.message).toBe('string');
+      expect(body).not.toHaveProperty('data');
+    }
   });
 });

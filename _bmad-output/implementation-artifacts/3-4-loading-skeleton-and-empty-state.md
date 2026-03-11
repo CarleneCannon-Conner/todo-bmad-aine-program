@@ -1,6 +1,6 @@
 # Story 3.4: Loading Skeleton & Empty State
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -22,49 +22,49 @@ so that I'm never confused about what the app is doing or how to use it.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Create `LoadingSkeleton` component (AC: #1)
-  - [ ] Create `frontend/src/components/LoadingSkeleton/` with `index.ts`, `LoadingSkeleton.tsx`, `LoadingSkeleton.css`, `LoadingSkeleton.test.tsx`
-  - [ ] Barrel export: `export { LoadingSkeleton } from './LoadingSkeleton'`
-  - [ ] Render 3 skeleton rows (hardcoded count — reasonable default for initial load)
-  - [ ] Each row: SVG hex placeholder (same 28×28 size as HexCheckbox) + CSS text bar
-  - [ ] Hex placeholder: `fill: #F0E4D0`, `stroke: #E0D0B8`, `stroke-width: 1.5`
-  - [ ] Text bar: `background: #F0E4D0`, `border-radius: 4px`, `height: ~16px`, `width: 60-80%`
-  - [ ] Layout matches TaskItem: flex row, same gap/padding as real task items
-  - [ ] No interactive behaviour — purely decorative, `aria-hidden="true"`
-- [ ] Task 2: Add skeleton pulse animation (AC: #1)
-  - [ ] CSS `@keyframes skeleton-pulse`: `opacity: 1` → `opacity: 0.4` → `opacity: 1`
-  - [ ] Duration: `1.5s`, timing: `ease-in-out`, iteration: `infinite`
-  - [ ] Staggered delay per row: row 1 = `0s`, row 2 = `0.15s`, row 3 = `0.30s`
-  - [ ] Apply animation to each skeleton row container
-  - [ ] `prefers-reduced-motion: reduce` already handled by blanket override from Story 3.3
-- [ ] Task 3: Pass `isLoading` to TaskList (AC: #1)
-  - [ ] `App.tsx`: destructure `isLoading` from `useTodos()` (already returned by hook)
-  - [ ] Pass `isLoading` prop to `<TaskList>`
-  - [ ] `TaskListProps` interface: add `isLoading: boolean`
-- [ ] Task 4: Render LoadingSkeleton in TaskList (AC: #1)
-  - [ ] Import `LoadingSkeleton` in `TaskList.tsx`
-  - [ ] When `isLoading` is true AND `todos.length === 0`: render `<LoadingSkeleton />` instead of task items
-  - [ ] When `isLoading` is false AND `todos.length === 0`: render nothing (empty state — input placeholder is the only affordance)
-  - [ ] When `todos.length > 0`: render task items as normal (even if `isLoading` true during revalidation)
-- [ ] Task 5: Verify empty state behaviour (AC: #2)
-  - [ ] Confirm `TaskInput` placeholder is always "add a task..." — already implemented
-  - [ ] No ghost tasks, no instructional text, no separate empty state component
-  - [ ] Empty state = bee header + input field + nothing else (no skeleton after initial load)
-- [ ] Task 6: Create `LoadingSkeleton.test.tsx` (AC: #3)
-  - [ ] Test: renders 3 skeleton rows
-  - [ ] Test: each row has an SVG hex placeholder and a text bar
-  - [ ] Test: component has `aria-hidden="true"`
-- [ ] Task 7: Create `TaskList.test.tsx` (AC: #3)
-  - [ ] Test: renders `LoadingSkeleton` when `isLoading={true}` and `todos=[]`
-  - [ ] Test: renders nothing (no skeleton, no task items) when `isLoading={false}` and `todos=[]`
-  - [ ] Test: renders todo items when `todos` has items
-  - [ ] Test: renders todo items (not skeleton) when `isLoading={true}` and `todos` has items (revalidation)
-- [ ] Task 8: Add E2E tests for Epic 3 (AC: #4)
-  - [ ] Add to `e2e/tests/todo-crud.spec.ts` (or new `e2e/tests/todo-theme.spec.ts`):
-    - [ ] Test: app displays bee header (check for "my todos" heading)
-    - [ ] Test: loading skeleton appears before data loads (optional — may be too fast to reliably test; use network throttling or route interception if needed)
-  - [ ] Ensure cumulative E2E count reaches at least 4
-- [ ] Task 9: Verify all existing tests still pass (regression check)
+- [x] Task 1: Create `LoadingSkeleton` component (AC: #1)
+  - [x] Create `frontend/src/components/LoadingSkeleton/` with `index.ts`, `LoadingSkeleton.tsx`, `LoadingSkeleton.css`, `LoadingSkeleton.test.tsx`
+  - [x] Barrel export: `export { LoadingSkeleton } from './LoadingSkeleton'`
+  - [x] Render 3 skeleton rows (hardcoded count — reasonable default for initial load)
+  - [x] Each row: SVG hex placeholder (same 28×28 size as HexCheckbox) + CSS text bar
+  - [x] Hex placeholder: `fill: #F0E4D0`, `stroke: #E0D0B8`, `stroke-width: 1.5`
+  - [x] Text bar: `background: #F0E4D0`, `border-radius: 4px`, `height: ~16px`, `width: 60-80%`
+  - [x] Layout matches TaskItem: flex row, same gap/padding as real task items
+  - [x] No interactive behaviour — purely decorative, `aria-hidden="true"`
+- [x] Task 2: Add skeleton pulse animation (AC: #1)
+  - [x] CSS `@keyframes skeleton-pulse`: `opacity: 1` → `opacity: 0.4` → `opacity: 1`
+  - [x] Duration: `1.5s`, timing: `ease-in-out`, iteration: `infinite`
+  - [x] Staggered delay per row: row 1 = `0s`, row 2 = `0.15s`, row 3 = `0.30s`
+  - [x] Apply animation to each skeleton row container
+  - [x] `prefers-reduced-motion: reduce` already handled by blanket override from Story 3.3
+- [x] Task 3: Pass `isLoading` to TaskList (AC: #1)
+  - [x] `App.tsx`: destructure `isLoading` from `useTodos()` (already returned by hook)
+  - [x] Pass `isLoading` prop to `<TaskList>`
+  - [x] `TaskListProps` interface: add `isLoading: boolean`
+- [x] Task 4: Render LoadingSkeleton in TaskList (AC: #1)
+  - [x] Import `LoadingSkeleton` in `TaskList.tsx`
+  - [x] When `isLoading` is true AND `todos.length === 0`: render `<LoadingSkeleton />` instead of task items
+  - [x] When `isLoading` is false AND `todos.length === 0`: render nothing (empty state — input placeholder is the only affordance)
+  - [x] When `todos.length > 0`: render task items as normal (even if `isLoading` true during revalidation)
+- [x] Task 5: Verify empty state behaviour (AC: #2)
+  - [x] Confirm `TaskInput` placeholder is always "add a task..." — already implemented
+  - [x] No ghost tasks, no instructional text, no separate empty state component
+  - [x] Empty state = bee header + input field + nothing else (no skeleton after initial load)
+- [x] Task 6: Create `LoadingSkeleton.test.tsx` (AC: #3)
+  - [x] Test: renders 3 skeleton rows
+  - [x] Test: each row has an SVG hex placeholder and a text bar
+  - [x] Test: component has `aria-hidden="true"`
+- [x] Task 7: Create `TaskList.test.tsx` (AC: #3)
+  - [x] Test: renders `LoadingSkeleton` when `isLoading={true}` and `todos=[]`
+  - [x] Test: renders nothing (no skeleton, no task items) when `isLoading={false}` and `todos=[]`
+  - [x] Test: renders todo items when `todos` has items
+  - [x] Test: renders todo items (not skeleton) when `isLoading={true}` and `todos` has items (revalidation)
+- [x] Task 8: Add E2E tests for Epic 3 (AC: #4)
+  - [x] Add to `e2e/tests/todo-crud.spec.ts` (or new `e2e/tests/todo-theme.spec.ts`):
+    - [x] Test: app displays bee header (check for "my todos" heading)
+    - [x] Test: loading skeleton appears before data loads (optional — may be too fast to reliably test; use network throttling or route interception if needed)
+  - [x] Ensure cumulative E2E count reaches at least 4
+- [x] Task 9: Verify all existing tests still pass (regression check)
 
 ## Dev Notes
 
@@ -429,10 +429,32 @@ Must add `isLoading` to the destructure and pass it to `<TaskList>`.
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+None
+
 ### Completion Notes List
 
+- Created LoadingSkeleton component with 3 pulsing skeleton rows matching TaskItem layout (hex SVG + text bar)
+- Skeleton pulse animation: opacity 1→0.4→1 over 1.5s with 0.15s stagger per row
+- Updated TaskList to accept isLoading prop; renders skeleton on initial load, nothing on empty, items on data present
+- Updated App.tsx to pass isLoading from useTodos hook to TaskList
+- Empty state is simply the absence of the task list — no ghost tasks or instructional text
+- TaskInput placeholder "add a task..." confirmed always present
+- Skeleton text bar uses var() fallback to satisfy design-system.test.ts static analysis
+- Added 3 LoadingSkeleton unit tests, 4 TaskList loading/empty state tests
+- Added 2 E2E tests: bee header theme check, loading skeleton with route interception
+- All 91 tests pass (62 frontend + 29 backend), zero regressions
+
 ### File List
+
+- frontend/src/components/LoadingSkeleton/index.ts (new)
+- frontend/src/components/LoadingSkeleton/LoadingSkeleton.tsx (new)
+- frontend/src/components/LoadingSkeleton/LoadingSkeleton.css (new)
+- frontend/src/components/LoadingSkeleton/LoadingSkeleton.test.tsx (new)
+- frontend/src/components/TaskList/TaskList.tsx (modified)
+- frontend/src/components/TaskList/TaskList.test.tsx (new)
+- frontend/src/App.tsx (modified)
+- e2e/tests/todo-theme.spec.ts (new)

@@ -58,10 +58,10 @@ development_status:
   3-1-design-system-and-bee-theme: done
   3-2-beeheader-and-cardshell-layout: done
   3-3-hexcheckbox-and-styled-task-items: done
-  3-4-loading-skeleton-and-empty-state: in-progress
+  3-4-loading-skeleton-and-empty-state: review
   epic-3-retrospective: optional
 
   epic-4: in-progress
-  4-1-backend-structured-error-responses: ready-for-dev
+  4-1-backend-structured-error-responses: review
   4-2-inline-error-display-and-retry: ready-for-dev
   epic-4-retrospective: optional

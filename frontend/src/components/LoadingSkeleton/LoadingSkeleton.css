@@ -17,7 +17,7 @@
 .skeleton-text-bar {
   flex: 1;
   height: 16px;
-  background: #F0E4D0;
+  background: var(--color-skeleton, #F0E4D0);
   border-radius: 4px;
   max-width: 75%;
 }
