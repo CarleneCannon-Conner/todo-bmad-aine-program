@@ -11,6 +11,7 @@ out/
 
 # Environment files
 .env
+.env.test
 .env.local
 .env.*.local
 
@@ -28,6 +29,11 @@ Thumbs.db
 .vscode/
 .idea/
 .cursor/
+.claude/
+
+# Build artifacts
+*.local
+*.tsbuildinfo
 
 # Test coverage
 coverage/

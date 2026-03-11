@@ -1,6 +1,6 @@
 # Story 1.1: Monorepo Scaffold & Shared Types
 
-Status: ready-for-dev
+Status: done
 
 ## Story
 
@@ -20,44 +20,44 @@ so that I have a solid foundation to build the frontend and backend against a si
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Initialize monorepo root (AC: #1)
-  - [ ] Create root `package.json` with `"private": true`
-  - [ ] Create `pnpm-workspace.yaml` listing `frontend`, `backend`, `shared`
-  - [ ] Create root `.gitignore` (node_modules/, .env, dist/, *.local, *.tsbuildinfo, .env.test)
-- [ ] Task 2: Create shared package `@todo/shared` (AC: #2)
-  - [ ] Create `shared/package.json` with `name: "@todo/shared"`, set `"main": "index.ts"` and `"types": "index.ts"`
-  - [ ] Create `shared/tsconfig.json` with strict mode
-  - [ ] Create `shared/schema.ts` with Drizzle `todos` table definition
-  - [ ] Create `shared/types.ts` with `Todo`, `CreateTodoRequest`, `ApiResponse<T>`
-  - [ ] Create `shared/index.ts` barrel re-exporting schema.ts and types.ts
-  - [ ] Install `drizzle-orm` and `pg` as dependencies in shared
-- [ ] Task 3: Scaffold frontend package (AC: #1, #4)
-  - [ ] Run `pnpm create vite@latest frontend -- --template react-ts`
-  - [ ] Add `"@todo/shared": "workspace:*"` to frontend `package.json` dependencies
-  - [ ] Verify `tsconfig.json` has strict mode
-  - [ ] Create `frontend/.env.example` with documented variables (e.g., `VITE_API_URL`)
-  - [ ] Add Vitest config to frontend (vitest.config.ts or vite.config.ts with test block)
-  - [ ] Install vitest, @testing-library/react, @testing-library/jest-dom, jsdom as devDependencies
-  - [ ] Add `"test": "vitest run"` script to package.json
-- [ ] Task 4: Scaffold backend package (AC: #1, #4)
-  - [ ] Create `backend/package.json` with scripts: `dev`, `start`, `test`
-  - [ ] `dev` script: `tsx watch --env-file .env src/server.ts`
-  - [ ] `test` script: `vitest run`
-  - [ ] Create `backend/tsconfig.json` with strict mode, target ES2022+
-  - [ ] Install fastify, drizzle-orm, pg, @todo/shared (workspace:*)
-  - [ ] Install devDependencies: typescript, @types/node, tsx, vitest, @types/pg
-  - [ ] Create `backend/.env.example` with `DATABASE_URL=postgresql://user:password@localhost:5432/todo_dev` and `PORT=3000`
-  - [ ] Create `backend/.env.test` (gitignored) documenting test `DATABASE_URL`
-  - [ ] Create `backend/drizzle.config.ts` pointing to shared schema
-- [ ] Task 5: Scaffold E2E test infrastructure (AC: #4)
-  - [ ] Create `e2e/` directory at monorepo root
-  - [ ] Create `e2e/package.json` with playwright dependency
-  - [ ] Create `e2e/playwright.config.ts` with baseURL pointing to frontend dev server
-  - [ ] Create placeholder `e2e/tests/` directory
-- [ ] Task 6: Verify workspace setup (AC: #1, #4)
-  - [ ] Run `pnpm install` from root — all workspace dependencies resolve
-  - [ ] Verify `pnpm -r test` runs Vitest in both frontend and backend
-  - [ ] Verify shared types importable from both frontend and backend
+- [x] Task 1: Initialize monorepo root (AC: #1)
+  - [x] Create root `package.json` with `"private": true`
+  - [x] Create `pnpm-workspace.yaml` listing `frontend`, `backend`, `shared`
+  - [x] Create root `.gitignore` (node_modules/, .env, dist/, *.local, *.tsbuildinfo, .env.test)
+- [x] Task 2: Create shared package `@todo/shared` (AC: #2)
+  - [x] Create `shared/package.json` with `name: "@todo/shared"`, set `"main": "index.ts"` and `"types": "index.ts"`
+  - [x] Create `shared/tsconfig.json` with strict mode
+  - [x] Create `shared/schema.ts` with Drizzle `todos` table definition
+  - [x] Create `shared/types.ts` with `Todo`, `CreateTodoRequest`, `ApiResponse<T>`
+  - [x] Create `shared/index.ts` barrel re-exporting schema.ts and types.ts
+  - [x] Install `drizzle-orm` as dependency in shared (pg not needed — only backend connects to DB)
+- [x] Task 3: Scaffold frontend package (AC: #1, #4)
+  - [x] Run `pnpm create vite@latest frontend -- --template react-ts`
+  - [x] Add `"@todo/shared": "workspace:*"` to frontend `package.json` dependencies
+  - [x] Verify `tsconfig.json` has strict mode
+  - [x] Create `frontend/.env.example` with documented variables (e.g., `VITE_API_URL`)
+  - [x] Add Vitest config to frontend (vitest.config.ts or vite.config.ts with test block)
+  - [x] Install vitest, @testing-library/react, @testing-library/jest-dom, jsdom as devDependencies
+  - [x] Add `"test": "vitest run"` script to package.json
+- [x] Task 4: Scaffold backend package (AC: #1, #4)
+  - [x] Create `backend/package.json` with scripts: `dev`, `start`, `test`
+  - [x] `dev` script: `tsx watch --env-file .env src/server.ts`
+  - [x] `test` script: `vitest run`
+  - [x] Create `backend/tsconfig.json` with strict mode, target ES2022+
+  - [x] Install fastify, drizzle-orm, pg, @todo/shared (workspace:*)
+  - [x] Install devDependencies: typescript, @types/node, tsx, vitest, @types/pg
+  - [x] Create `backend/.env.example` with `DATABASE_URL=postgresql://user:password@localhost:5432/todo_dev` and `PORT=3000`
+  - [x] Create `backend/.env.test` (gitignored) documenting test `DATABASE_URL`
+  - [x] Create `backend/drizzle.config.ts` pointing to shared schema
+- [x] Task 5: Scaffold E2E test infrastructure (AC: #4)
+  - [x] Create `e2e/` directory at monorepo root
+  - [x] Create `e2e/package.json` with playwright dependency
+  - [x] Create `e2e/playwright.config.ts` with baseURL pointing to frontend dev server
+  - [x] Create placeholder `e2e/tests/` directory
+- [x] Task 6: Verify workspace setup (AC: #1, #4)
+  - [x] Run `pnpm install` from root — all workspace dependencies resolve
+  - [x] Verify `pnpm -r test` runs Vitest in both frontend and backend
+  - [x] Verify shared types importable from both frontend and backend
 
 ## Dev Notes
 
@@ -327,10 +327,58 @@ todo/
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+- pnpm install required `onlyBuiltDependencies` config for esbuild postinstall scripts
+- Added `passWithNoTests: true` to Vitest configs to allow clean test runs before story-specific tests exist
+
 ### Completion Notes List
 
+- Monorepo scaffold complete with pnpm workspaces (frontend, backend, shared, e2e)
+- @todo/shared package created with Drizzle schema (todos table), TypeScript types (Todo, CreateTodoRequest, ApiResponse<T>), and barrel export
+- Frontend scaffolded with React + Vite, Vitest + jsdom + testing-library configured, Vite proxy for /api
+- Backend scaffolded with Fastify, Drizzle ORM, tsx watch dev script, Vitest configured, drizzle.config.ts pointing to shared schema
+- E2E infrastructure set up with Playwright config targeting localhost:5173
+- All 4 smoke tests pass (2 frontend, 2 backend) confirming shared type imports work across workspace
+- .gitignore updated with .env.test, *.tsbuildinfo, *.local
+
 ### File List
+
+- package.json (new — root monorepo config, test script excludes e2e)
+- pnpm-workspace.yaml (new — lists frontend, backend, shared, e2e)
+- pnpm-lock.yaml (new — generated)
+- .gitignore (modified — added .env.test, *.tsbuildinfo, *.local)
+- shared/package.json (new)
+- shared/tsconfig.json (new)
+- shared/schema.ts (new)
+- shared/types.ts (new)
+- shared/index.ts (new)
+- frontend/package.json (new — react, vite, vitest, testing-library, @todo/shared)
+- frontend/vite.config.ts (new — react plugin, proxy, vitest config)
+- frontend/tsconfig.json (new — strict mode, bundler resolution)
+- frontend/index.html (new — React root div, main.tsx entry)
+- frontend/.env.example (new)
+- frontend/.gitignore (new — from Vite scaffold)
+- frontend/src/main.tsx (new — React entry point)
+- frontend/src/App.tsx (new — placeholder React component)
+- frontend/src/App.css (new — root layout styles)
+- frontend/src/index.css (new — global resets and defaults)
+- frontend/src/test-setup.ts (new — @testing-library/jest-dom import)
+- frontend/src/App.test.tsx (new — workspace smoke test)
+- frontend/public/vite.svg (new — Vite scaffold asset)
+- backend/package.json (new)
+- backend/tsconfig.json (new)
+- backend/vitest.config.ts (new)
+- backend/.env.example (new)
+- backend/.env.test (new — gitignored)
+- backend/drizzle.config.ts (new)
+- backend/src/setup.test.ts (new — workspace smoke test)
+- e2e/package.json (new)
+- e2e/playwright.config.ts (new)
+- e2e/tests/.gitkeep (new)
+
+### Change Log
+
+- 2026-03-11: Code review — Fixed frontend scaffold (was vanilla-ts, replaced with proper react-ts files), added e2e to pnpm-workspace.yaml, removed unnecessary @types/pg from shared, updated root test script to exclude e2e, corrected File List
