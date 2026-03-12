@@ -67,4 +67,47 @@ test.describe('Todo CRUD', () => {
     // Verify input is cleared
     await expect(input).toHaveValue('');
   });
+
+  test('error message displays when backend fails and user can retry', async ({ page }) => {
+    await page.goto('/');
+
+    // Add a task first (this will succeed)
+    const todoText = `Error test ${Date.now()}`;
+    const input = page.getByPlaceholder('add a task...');
+    await input.fill(todoText);
+    await input.press('Enter');
+    await expect(page.getByText(todoText)).toBeVisible();
+
+    // Intercept the next toggle request to simulate failure
+    await page.route('**/api/todos/*', async (route) => {
+      if (route.request().method() === 'PATCH') {
+        await route.fulfill({
+          status: 500,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: false,
+            error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },
+          }),
+        });
+      } else {
+        await route.continue();
+      }
+    });
+
+    // Toggle the task — should fail
+    await page.getByText(todoText).click();
+
+    // Error message should appear
+    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.getByText(/Couldn't update task/)).toBeVisible();
+
+    // Remove the interception so retry succeeds
+    await page.unroute('**/api/todos/*');
+
+    // Retry — click the task again
+    await page.getByText(todoText).click();
+
+    // Error should clear on success
+    await expect(page.getByText(/Couldn't update task/)).not.toBeVisible({ timeout: 5000 });
+  });
 });

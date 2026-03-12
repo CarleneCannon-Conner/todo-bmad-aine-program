@@ -90,4 +90,26 @@ describe('TaskItem', () => {
     const { container } = render(<TaskItem {...defaultProps} />);
     expect(container.querySelector('.hex-checkbox--checked')).toBeNull();
   });
+
+  it('displays error message when error prop is provided', () => {
+    render(
+      <TaskItem {...defaultProps} error="Couldn't update task. Try again." />,
+    );
+    expect(screen.getByRole('alert')).toBeTruthy();
+    expect(screen.getByText("Couldn't update task. Try again.")).toBeTruthy();
+  });
+
+  it('does not display error message when no error', () => {
+    render(<TaskItem {...defaultProps} />);
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('remains clickable for retry when error is displayed', () => {
+    const onToggle = vi.fn();
+    render(
+      <TaskItem {...defaultProps} onToggle={onToggle} error="Couldn't update task. Try again." />,
+    );
+    fireEvent.click(screen.getByText('Test task'));
+    expect(onToggle).toHaveBeenCalledWith('1');
+  });
 });

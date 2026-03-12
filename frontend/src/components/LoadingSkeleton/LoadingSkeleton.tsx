@@ -22,7 +22,7 @@ export function LoadingSkeleton() {
               strokeWidth="1.5"
             />
           </svg>
-          <div className="skeleton-text-bar" />
+          <div className="skeleton-text-bar" style={{ maxWidth: ['60%', '80%', '70%'][i] }} />
         </div>
       ))}
     </div>

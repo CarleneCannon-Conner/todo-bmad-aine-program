@@ -1,6 +1,6 @@
 # Story 3.4: Loading Skeleton & Empty State
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -447,6 +447,10 @@ None
 - Added 3 LoadingSkeleton unit tests, 4 TaskList loading/empty state tests
 - Added 2 E2E tests: bee header theme check, loading skeleton with route interception
 - All 91 tests pass (62 frontend + 29 backend), zero regressions
+
+### Change Log
+
+- **Code Review Fix (2026-03-12):** Aligned skeleton row gap (0.75rem→0.5rem) and padding (0.75rem→0.375rem) to match TaskItem layout; varied skeleton text bar widths (60%, 80%, 70%) for visual interest; kept var(--color-skeleton) fallback as acceptable workaround (documented in Dev Notes).
 
 ### File List
 

@@ -7,10 +7,29 @@ export function useTodos() {
   const { data, error, isLoading, mutate } = useSWR<Todo[]>('/api/todos', fetchTodos);
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set());
+  const [itemErrors, setItemErrors] = useState<Map<string, string>>(new Map());
+
+  const setError = (key: string, message: string) => {
+    setItemErrors(prev => new Map(prev).set(key, message));
+  };
+
+  const clearError = (key: string) => {
+    setItemErrors(prev => {
+      const next = new Map(prev);
+      next.delete(key);
+      return next;
+    });
+  };
 
   const createTodo = async (text: string) => {
-    await apiCreateTodo(text);
-    mutate();
+    try {
+      await apiCreateTodo(text);
+      mutate();
+      clearError('create');
+    } catch (err) {
+      setError('create', "Couldn't add task. Try again.");
+      throw err;
+    }
   };
 
   const toggleTodo = async (id: string) => {
@@ -33,6 +52,9 @@ export function useTodos() {
           revalidate: false,
         }
       );
+      clearError(id);
+    } catch {
+      setError(id, "Couldn't update task. Try again.");
     } finally {
       setTogglingIds(prev => {
         const next = new Set(prev);
@@ -57,6 +79,9 @@ export function useTodos() {
           revalidate: false,
         }
       );
+      clearError(id);
+    } catch {
+      setError(id, "Couldn't delete task. Try again.");
     } finally {
       setDeletingIds(prev => {
         const next = new Set(prev);
@@ -75,5 +100,6 @@ export function useTodos() {
     deleteTodo,
     togglingIds,
     deletingIds,
+    itemErrors,
   };
 }

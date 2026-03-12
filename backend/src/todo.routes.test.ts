@@ -373,10 +373,12 @@ describe('ApiResponse<T> envelope consistency', () => {
 
   it('every error response has exactly { success: false, error: { code, message } } shape', async () => {
     const errorResponses = [
-      await app.inject({ method: 'POST', url: '/api/todos', payload: { text: '' } }), // 400
+      await app.inject({ method: 'POST', url: '/api/todos', payload: { text: '' } }), // 400 validation
+      await app.inject({ method: 'PATCH', url: '/api/todos/not-a-uuid', payload: { isCompleted: true } }), // 400 TypeBox schema
       await app.inject({ method: 'PATCH', url: '/api/todos/00000000-0000-0000-0000-000000000000', payload: { isCompleted: true } }), // 404
       await app.inject({ method: 'DELETE', url: '/api/todos/00000000-0000-0000-0000-000000000000' }), // 404
       await app.inject({ method: 'GET', url: '/api/unknown' }), // 404 unknown route
+      await app.inject({ method: 'GET', url: '/api/test-error' }), // 500 internal error
     ];
 
     for (const res of errorResponses) {

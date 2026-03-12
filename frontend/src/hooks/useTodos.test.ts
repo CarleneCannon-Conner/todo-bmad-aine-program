@@ -223,6 +223,46 @@ describe('useTodos', () => {
     });
   });
 
+  it('sets itemErrors on toggle failure and clears on success', async () => {
+    const initialTodos = [
+      { id: '1', text: 'Test', isCompleted: false, createdAt: new Date() },
+    ];
+
+    mockFetchTodos.mockResolvedValue(initialTodos);
+    mockToggleTodo.mockRejectedValueOnce(new Error('Network error'));
+
+    const { result } = renderHook(() => useTodos(), { wrapper });
+
+    await waitFor(() => {
+      expect(result.current.todos).toEqual(initialTodos);
+    });
+
+    mockFetchTodos.mockResolvedValue(initialTodos);
+
+    await act(async () => {
+      try { await result.current.toggleTodo('1'); } catch {}
+    });
+
+    // Error should be set for that item
+    await waitFor(() => {
+      expect(result.current.itemErrors.get('1')).toBe("Couldn't update task. Try again.");
+    });
+
+    // Now succeed on retry
+    const toggledTodo = { ...initialTodos[0], isCompleted: true };
+    mockToggleTodo.mockResolvedValueOnce(toggledTodo);
+    mockFetchTodos.mockResolvedValue([toggledTodo]);
+
+    await act(async () => {
+      await result.current.toggleTodo('1');
+    });
+
+    // Error should be cleared
+    await waitFor(() => {
+      expect(result.current.itemErrors.has('1')).toBe(false);
+    });
+  });
+
   it('optimistic delete removes todo from list before API resolves', async () => {
     const initialTodos = [
       { id: '1', text: 'Delete me', isCompleted: false, createdAt: new Date() },

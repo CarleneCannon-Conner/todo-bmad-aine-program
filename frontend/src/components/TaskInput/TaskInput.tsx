@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import './TaskInput.css';
 
 interface TaskInputProps {
@@ -6,21 +7,24 @@ interface TaskInputProps {
   onSubmit: () => void;
 }
 
-export function TaskInput({ value, onChange, onSubmit }: TaskInputProps) {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSubmit();
-    }
-  };
+export const TaskInput = forwardRef<HTMLInputElement, TaskInputProps>(
+  function TaskInput({ value, onChange, onSubmit }, ref) {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        onSubmit();
+      }
+    };
 
-  return (
-    <input
-      className="task-input"
-      type="text"
-      placeholder="add a task..."
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      onKeyDown={handleKeyDown}
-    />
-  );
-}
+    return (
+      <input
+        ref={ref}
+        className="task-input"
+        type="text"
+        placeholder="add a task..."
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+    );
+  }
+);

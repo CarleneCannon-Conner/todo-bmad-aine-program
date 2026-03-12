@@ -16,6 +16,7 @@ const defaultProps = {
   onDelete: vi.fn(),
   togglingIds: new Set<string>(),
   deletingIds: new Set<string>(),
+  itemErrors: new Map<string, string>(),
 };
 
 describe('TaskList', () => {

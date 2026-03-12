@@ -54,14 +54,18 @@ development_status:
   2-4-addbutton-and-input-validation: done
   epic-2-retrospective: optional
 
-  epic-3: in-progress
+  epic-3: done
   3-1-design-system-and-bee-theme: done
   3-2-beeheader-and-cardshell-layout: done
   3-3-hexcheckbox-and-styled-task-items: done
-  3-4-loading-skeleton-and-empty-state: review
+  3-4-loading-skeleton-and-empty-state: done
   epic-3-retrospective: optional
 
-  epic-4: in-progress
-  4-1-backend-structured-error-responses: review
-  4-2-inline-error-display-and-retry: ready-for-dev
+  epic-4: done
+  4-1-backend-structured-error-responses: done
+  4-2-inline-error-display-and-retry: done
   epic-4-retrospective: optional
+
+  # Bug fixes
+  bug-tasklist-border-bottom: done
+  bug-tasklist-margin-top: done

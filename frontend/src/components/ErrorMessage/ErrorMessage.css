@@ -1,0 +1,6 @@
+.error-message {
+  color: var(--color-error, #D32F2F);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
+  line-height: 1.3;
+}

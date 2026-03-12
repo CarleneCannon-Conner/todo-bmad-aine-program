@@ -17,7 +17,7 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
   });
 
   // Global error handler — catches all unhandled errors
-  app.setErrorHandler(async (error, _request, reply) => {
+  app.setErrorHandler(async (error, request, reply) => {
     if (error.validation) {
       const response: ApiResponse<never> = {
         success: false,
@@ -39,7 +39,7 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
       };
       return reply.status(404).send(response);
     }
-    app.log.error(error);
+    request.log.error(error);
     const response: ApiResponse<never> = {
       success: false,
       error: { code: 'INTERNAL_ERROR', message: 'Internal server error' },

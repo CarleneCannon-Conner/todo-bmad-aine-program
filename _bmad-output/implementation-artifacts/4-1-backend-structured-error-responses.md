@@ -1,6 +1,6 @@
 # Story 4.1: Backend Structured Error Responses
 
-Status: ready-for-dev
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -26,34 +26,34 @@ so that the frontend can tell me exactly what went wrong.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Add global `setNotFoundHandler` in `app.ts` (AC: #4, #5)
-  - [ ] Add `app.setNotFoundHandler()` in `buildApp()` that returns `ApiResponse<never>` with `NOT_FOUND` code
-  - [ ] Response format: `{ success: false, error: { code: "NOT_FOUND", message: "Route not found" } }` with status 404
-  - [ ] This ensures ALL 404s (including unknown routes outside the todo plugin) use the envelope format
-- [ ] Task 2: Move error handler from route-scoped to app-level (AC: #3, #4)
-  - [ ] Move `setErrorHandler` from `todo.routes.ts` to `app.ts` (or add an app-level handler alongside the route-scoped one)
-  - [ ] **Important decision:** The current route-scoped handler works for todo routes, but unexpected errors outside the routes plugin won't be caught. An app-level handler ensures ALL errors are caught.
-  - [ ] The existing error handler logic stays the same — just move it to `app.ts`
-  - [ ] Import `ValidationError`, `NotFoundError` from `todo.service.js` in `app.ts`
-  - [ ] Remove `fastify.setErrorHandler()` from `todo.routes.ts`
-- [ ] Task 3: Add 500 INTERNAL_ERROR test (AC: #3, #6)
-  - [ ] Create a test that simulates an unexpected server error
-  - [ ] Approach: use `app.inject()` with a route that will throw a non-ValidationError, non-NotFoundError
-  - [ ] OR: register a test-only route that throws a generic `Error`
-  - [ ] Verify response is 500 with `{ success: false, error: { code: "INTERNAL_ERROR", message: "Internal server error" } }`
-  - [ ] Verify the original error message is NOT exposed to the client (security)
-- [ ] Task 4: Add test for unknown route 404 in ApiResponse format (AC: #5, #6)
-  - [ ] Test: `GET /api/unknown` returns 404 with `ApiResponse<T>` envelope
-  - [ ] Test: response has `success: false`, `error.code: "NOT_FOUND"`, `error.message` is a string
-- [ ] Task 5: Add comprehensive ApiResponse<T> shape validation tests (AC: #6)
-  - [ ] Test: every error response across all endpoints has exactly `{ success, error: { code, message } }` shape
-  - [ ] Test: every success response has exactly `{ success, data }` shape
-  - [ ] These may already exist partially — verify and add any missing coverage
-- [ ] Task 6: Verify Pino logging on 500 errors (AC: #3)
-  - [ ] Confirm `fastify.log.error(error)` is called in the catch-all handler
-  - [ ] This is already implemented — just verify it's still present after the refactor
-- [ ] Task 7: Verify all existing tests still pass (regression check)
-  - [ ] Run `pnpm --filter backend test` to verify nothing broke from the error handler move
+- [x] Task 1: Add global `setNotFoundHandler` in `app.ts` (AC: #4, #5)
+  - [x] Add `app.setNotFoundHandler()` in `buildApp()` that returns `ApiResponse<never>` with `NOT_FOUND` code
+  - [x] Response format: `{ success: false, error: { code: "NOT_FOUND", message: "Route not found" } }` with status 404
+  - [x] This ensures ALL 404s (including unknown routes outside the todo plugin) use the envelope format
+- [x] Task 2: Move error handler from route-scoped to app-level (AC: #3, #4)
+  - [x] Move `setErrorHandler` from `todo.routes.ts` to `app.ts` (or add an app-level handler alongside the route-scoped one)
+  - [x] **Important decision:** The current route-scoped handler works for todo routes, but unexpected errors outside the routes plugin won't be caught. An app-level handler ensures ALL errors are caught.
+  - [x] The existing error handler logic stays the same — just move it to `app.ts`
+  - [x] Import `ValidationError`, `NotFoundError` from `todo.service.js` in `app.ts`
+  - [x] Remove `fastify.setErrorHandler()` from `todo.routes.ts`
+- [x] Task 3: Add 500 INTERNAL_ERROR test (AC: #3, #6)
+  - [x] Create a test that simulates an unexpected server error
+  - [x] Approach: use `app.inject()` with a route that will throw a non-ValidationError, non-NotFoundError
+  - [x] OR: register a test-only route that throws a generic `Error`
+  - [x] Verify response is 500 with `{ success: false, error: { code: "INTERNAL_ERROR", message: "Internal server error" } }`
+  - [x] Verify the original error message is NOT exposed to the client (security)
+- [x] Task 4: Add test for unknown route 404 in ApiResponse format (AC: #5, #6)
+  - [x] Test: `GET /api/unknown` returns 404 with `ApiResponse<T>` envelope
+  - [x] Test: response has `success: false`, `error.code: "NOT_FOUND"`, `error.message` is a string
+- [x] Task 5: Add comprehensive ApiResponse<T> shape validation tests (AC: #6)
+  - [x] Test: every error response across all endpoints has exactly `{ success, error: { code, message } }` shape
+  - [x] Test: every success response has exactly `{ success, data }` shape
+  - [x] These may already exist partially — verify and add any missing coverage
+- [x] Task 6: Verify Pino logging on 500 errors (AC: #3)
+  - [x] Confirm `fastify.log.error(error)` is called in the catch-all handler
+  - [x] This is already implemented — just verify it's still present after the refactor
+- [x] Task 7: Verify all existing tests still pass (regression check)
+  - [x] Run `pnpm --filter backend test` to verify nothing broke from the error handler move
 
 ## Dev Notes
 
@@ -325,10 +325,28 @@ Located at `todo.routes.ts:55-83` — handles `error.validation`, `ValidationErr
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Opus 4.6
 
 ### Debug Log References
 
+None
+
 ### Completion Notes List
 
+- Moved error handler from route-scoped (todo.routes.ts) to app-level (app.ts) for global coverage
+- Added setNotFoundHandler for unknown routes — returns ApiResponse envelope with NOT_FOUND code
+- Removed ValidationError/NotFoundError imports from todo.routes.ts (no longer needed there)
+- Pino logging confirmed present in catch-all 500 handler (app.log.error)
+- Added test-only route for 500 INTERNAL_ERROR testing (registered in beforeAll)
+- Added 2 unknown route 404 tests, 1 INTERNAL_ERROR 500 test, 2 comprehensive envelope consistency tests
+- All 96 tests pass (34 backend + 62 frontend), zero regressions
+
+### Change Log
+
+- **Code Review Fix (2026-03-12):** Switched 500 catch-all from `app.log.error(error)` to `request.log.error(error)` for request-scoped logging context; added 500 INTERNAL_ERROR and TypeBox validation 400 to envelope consistency test for complete error coverage.
+
 ### File List
+
+- backend/src/app.ts (modified — added setNotFoundHandler, setErrorHandler, imports)
+- backend/src/todo.routes.ts (modified — removed error handler and unused imports)
+- backend/src/todo.routes.test.ts (modified — added 5 new tests)

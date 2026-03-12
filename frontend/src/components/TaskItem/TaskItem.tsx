@@ -1,6 +1,7 @@
 import type { Todo } from '@todo/shared';
 import { HexCheckbox } from '../HexCheckbox';
 import { DeleteButton } from '../DeleteButton';
+import { ErrorMessage } from '../ErrorMessage';
 import './TaskItem.css';
 
 interface TaskItemProps {
@@ -9,9 +10,10 @@ interface TaskItemProps {
   onDelete: (id: string) => void;
   isToggling: boolean;
   isDeleting: boolean;
+  error?: string;
 }
 
-export function TaskItem({ todo, onToggle, onDelete, isToggling, isDeleting }: TaskItemProps) {
+export function TaskItem({ todo, onToggle, onDelete, isToggling, isDeleting, error }: TaskItemProps) {
   const className = [
     'task-item',
     todo.isCompleted ? 'task-item--completed' : '',
@@ -26,10 +28,13 @@ export function TaskItem({ todo, onToggle, onDelete, isToggling, isDeleting }: T
   };
 
   return (
-    <div className={className} onClick={handleClick}>
-      <HexCheckbox checked={todo.isCompleted} />
-      <span className="task-item-text">{todo.text}</span>
-      <DeleteButton onDelete={() => onDelete(todo.id)} disabled={isDeleting || isToggling} />
+    <div className={className}>
+      <div className="task-item-row" onClick={handleClick}>
+        <HexCheckbox checked={todo.isCompleted} />
+        <span className="task-item-text">{todo.text}</span>
+        <DeleteButton onDelete={() => onDelete(todo.id)} disabled={isDeleting || isToggling} />
+      </div>
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 }

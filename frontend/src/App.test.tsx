@@ -24,6 +24,7 @@ beforeEach(() => {
     deleteTodo: vi.fn(),
     togglingIds: new Set<string>(),
     deletingIds: new Set<string>(),
+    itemErrors: new Map<string, string>(),
   });
 });
 
@@ -91,5 +92,69 @@ describe('App input validation', () => {
     await waitFor(() => {
       expect(input).toHaveValue('');
     });
+  });
+});
+
+describe('App create error handling', () => {
+  it('displays error message below input when create fails', () => {
+    mockUseTodos.mockReturnValue({
+      todos: [],
+      isLoading: false,
+      error: undefined,
+      createTodo: mockCreateTodo,
+      toggleTodo: vi.fn(),
+      deleteTodo: vi.fn(),
+      togglingIds: new Set<string>(),
+      deletingIds: new Set<string>(),
+      itemErrors: new Map([['create', "Couldn't add task. Try again."]]),
+    });
+    render(<App />);
+    expect(screen.getByRole('alert')).toBeTruthy();
+    expect(screen.getByText("Couldn't add task. Try again.")).toBeTruthy();
+  });
+
+  it('retains input text on create failure', async () => {
+    mockCreateTodo.mockRejectedValue(new Error('Network error'));
+    render(<App />);
+    const input = screen.getByPlaceholderText('add a task...');
+    fireEvent.change(input, { target: { value: 'My task' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    await waitFor(() => {
+      expect(mockCreateTodo).toHaveBeenCalledWith('My task');
+    });
+    // Input should retain the text after failure
+    expect(input).toHaveValue('My task');
+  });
+
+  it('error clears when create error is removed from itemErrors', () => {
+    // First render with error
+    mockUseTodos.mockReturnValue({
+      todos: [],
+      isLoading: false,
+      error: undefined,
+      createTodo: mockCreateTodo,
+      toggleTodo: vi.fn(),
+      deleteTodo: vi.fn(),
+      togglingIds: new Set<string>(),
+      deletingIds: new Set<string>(),
+      itemErrors: new Map([['create', "Couldn't add task. Try again."]]),
+    });
+    const { rerender } = render(<App />);
+    expect(screen.getByRole('alert')).toBeTruthy();
+
+    // Re-render with cleared error (simulating successful retry)
+    mockUseTodos.mockReturnValue({
+      todos: [],
+      isLoading: false,
+      error: undefined,
+      createTodo: mockCreateTodo,
+      toggleTodo: vi.fn(),
+      deleteTodo: vi.fn(),
+      togglingIds: new Set<string>(),
+      deletingIds: new Set<string>(),
+      itemErrors: new Map(),
+    });
+    rerender(<App />);
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 });
