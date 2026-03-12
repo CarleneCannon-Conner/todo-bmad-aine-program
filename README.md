@@ -2,6 +2,8 @@
 
 A full-stack todo application built with React, Fastify, and PostgreSQL.
 
+![Todo App Screenshot](docs/screenshot.png)
+
 ## Prerequisites
 
 - Node.js 18+
