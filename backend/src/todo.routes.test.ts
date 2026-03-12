@@ -60,6 +60,21 @@ describe('POST /api/todos', () => {
     expect(typeof body.error.message).toBe('string');
   });
 
+  it('returns 400 with VALIDATION_ERROR when text exceeds 500 characters', async () => {
+    const longText = 'a'.repeat(501);
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/todos',
+      payload: { text: longText },
+    });
+
+    expect(response.statusCode).toBe(400);
+
+    const body = response.json();
+    expect(body.success).toBe(false);
+    expect(body.error.code).toBe('VALIDATION_ERROR');
+  });
+
   it('returns 400 on missing text field', async () => {
     const response = await app.inject({
       method: 'POST',

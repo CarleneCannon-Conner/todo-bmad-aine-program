@@ -41,4 +41,15 @@ describe('TaskInput', () => {
     fireEvent.change(screen.getByPlaceholderText('add a task...'), { target: { value: 'Hello' } });
     expect(onChange).toHaveBeenCalledWith('Hello');
   });
+
+  it('has maxLength attribute set to 500', () => {
+    render(<TaskInput {...defaultProps} />);
+    const input = screen.getByPlaceholderText('add a task...');
+    expect(input).toHaveAttribute('maxLength', '500');
+  });
+
+  it('has aria-label "Add a new task"', () => {
+    render(<TaskInput {...defaultProps} />);
+    expect(screen.getByLabelText('Add a new task')).toBeTruthy();
+  });
 });

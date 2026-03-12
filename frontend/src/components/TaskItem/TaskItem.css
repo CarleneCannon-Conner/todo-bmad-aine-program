@@ -12,7 +12,17 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.375rem 0.5rem;
+  border-radius: 8px;
+}
+
+.task-item-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 0;
   cursor: pointer;
+  border-radius: 4px;
 }
 
 .task-item-text {
@@ -26,7 +36,7 @@
 
 .task-item--completed .task-item-text {
   text-decoration: line-through;
-  color: var(--color-done-text, #B8A68E);
+  color: var(--color-done-text, #7A6D5B);
 }
 
 .task-item--toggling {

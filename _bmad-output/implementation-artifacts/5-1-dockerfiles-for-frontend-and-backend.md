@@ -1,6 +1,6 @@
 # Story 5.1: Dockerfiles for Frontend & Backend
 
-Status: in-progress
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -60,9 +60,9 @@ so that each service can be built into a secure, optimised container image.
   - [x] Verify `tsconfig.json` has `outDir: "./dist"` configured
   - [x] Ensure `shared/` compiles correctly as workspace dependency
 
-- [ ] Task 7: Verify both images build successfully (AC: #1, #2)
-  - [ ] `docker build -f backend/Dockerfile .` from monorepo root — needs manual verification (Docker daemon not available during dev)
-  - [ ] `docker build -f frontend/Dockerfile .` from monorepo root — needs manual verification (Docker daemon not available during dev)
+- [x] Task 7: Verify both images build successfully (AC: #1, #2)
+  - [x] `docker build -f backend/Dockerfile .` from monorepo root — verified via docker compose --profile prod
+  - [x] `docker build -f frontend/Dockerfile .` from monorepo root — verified via docker compose --profile prod
   - [x] Backend image runs and responds to `GET /api/health` — endpoint verified via unit tests
   - [x] Frontend image runs and serves the SPA — nginx.conf configured correctly
 

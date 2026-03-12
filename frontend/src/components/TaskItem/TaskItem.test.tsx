@@ -112,4 +112,53 @@ describe('TaskItem', () => {
     fireEvent.click(screen.getByText('Test task'));
     expect(onToggle).toHaveBeenCalledWith('1');
   });
+
+  it('has role="checkbox" and aria-checked reflecting completion state', () => {
+    const { rerender } = render(<TaskItem {...defaultProps} />);
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).toBeTruthy();
+    expect(checkbox.getAttribute('aria-checked')).toBe('false');
+
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    rerender(<TaskItem {...defaultProps} todo={completedTodo} />);
+    expect(screen.getByRole('checkbox').getAttribute('aria-checked')).toBe('true');
+  });
+
+  it('toggles on Enter key', () => {
+    const onToggle = vi.fn();
+    render(<TaskItem {...defaultProps} onToggle={onToggle} />);
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: 'Enter' });
+    expect(onToggle).toHaveBeenCalledWith('1');
+  });
+
+  it('toggles on Space key', () => {
+    const onToggle = vi.fn();
+    render(<TaskItem {...defaultProps} onToggle={onToggle} />);
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: ' ' });
+    expect(onToggle).toHaveBeenCalledWith('1');
+  });
+
+  it('deletes on Delete key', () => {
+    const onDelete = vi.fn();
+    render(<TaskItem {...defaultProps} onDelete={onDelete} />);
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: 'Delete' });
+    expect(onDelete).toHaveBeenCalledWith('1');
+  });
+
+  it('deletes on Backspace key', () => {
+    const onDelete = vi.fn();
+    render(<TaskItem {...defaultProps} onDelete={onDelete} />);
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: 'Backspace' });
+    expect(onDelete).toHaveBeenCalledWith('1');
+  });
+
+  it('does not toggle or delete via keyboard when toggling', () => {
+    const onToggle = vi.fn();
+    const onDelete = vi.fn();
+    render(<TaskItem {...defaultProps} onToggle={onToggle} onDelete={onDelete} isToggling={true} />);
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('checkbox'), { key: 'Delete' });
+    expect(onToggle).not.toHaveBeenCalled();
+    expect(onDelete).not.toHaveBeenCalled();
+  });
 });

@@ -66,17 +66,17 @@ development_status:
   4-2-inline-error-display-and-retry: done
   epic-4-retrospective: optional
 
-  epic-5: in-progress
-  5-1-dockerfiles-for-frontend-and-backend: in-progress
-  5-2-docker-compose-orchestration: review
-  5-3-compose-profiles-and-environment-configuration: review
+  epic-5: done
+  5-1-dockerfiles-for-frontend-and-backend: done
+  5-2-docker-compose-orchestration: done
+  5-3-compose-profiles-and-environment-configuration: done
   epic-5-retrospective: optional
 
-  epic-6: in-progress
-  6-1-test-coverage-analysis-and-improvement: in-progress
-  6-2-accessibility-audit-and-remediation: ready-for-dev
-  6-3-security-review-and-documentation: ready-for-dev
-  6-4-ai-integration-log-and-final-documentation: ready-for-dev
+  epic-6: done
+  6-1-test-coverage-analysis-and-improvement: done
+  6-2-accessibility-audit-and-remediation: done
+  6-3-security-review-and-documentation: done
+  6-4-ai-integration-log-and-final-documentation: done
   epic-6-retrospective: optional
 
   # Bug fixes (preserved from previous sprint)

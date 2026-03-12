@@ -23,7 +23,7 @@ export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds, 
   }
 
   return (
-    <ul className="task-list">
+    <ul className="task-list" aria-label="Todo list" aria-live="polite">
       {todos.map((todo) => (
         <li key={todo.id} className="task-list-item">
           <TaskItem

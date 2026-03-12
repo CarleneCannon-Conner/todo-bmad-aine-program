@@ -110,4 +110,20 @@ test.describe('Todo CRUD', () => {
     // Error should clear on success
     await expect(page.getByText(/Couldn't update task/)).not.toBeVisible({ timeout: 5000 });
   });
+
+  test('app loads with persisted data after page refresh', async ({ page }) => {
+    await page.goto('/');
+
+    const todoText = `Persist test ${Date.now()}`;
+    const input = page.getByPlaceholder('add a task...');
+    await input.fill(todoText);
+    await input.press('Enter');
+    await expect(page.getByText(todoText)).toBeVisible();
+
+    // Refresh the page
+    await page.reload();
+
+    // Task should still be visible after reload
+    await expect(page.getByText(todoText)).toBeVisible();
+  });
 });

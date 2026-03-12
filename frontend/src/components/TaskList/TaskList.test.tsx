@@ -49,4 +49,11 @@ describe('TaskList', () => {
     expect(container.querySelector('.loading-skeleton')).toBeNull();
     expect(screen.getByText('Test task')).toBeTruthy();
   });
+
+  it('has aria-label and aria-live="polite" on the list', () => {
+    render(<TaskList {...defaultProps} todos={[mockTodo]} />);
+    const list = screen.getByRole('list');
+    expect(list.getAttribute('aria-label')).toBe('Todo list');
+    expect(list.getAttribute('aria-live')).toBe('polite');
+  });
 });

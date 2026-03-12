@@ -35,13 +35,13 @@ pnpm -r dev
 
 Requires [Docker](https://docs.docker.com/get-docker/) installed. Run **one mode at a time** — `docker-compose down` before switching.
 
-### Production-like mode (default)
+### Production-like mode
 
 Built images, nginx serving frontend, optimised for testing deployment.
 
 ```bash
-docker-compose up            # start all services
-docker-compose up --build    # rebuild after code changes
+docker compose --profile prod up            # start all services
+docker compose --profile prod up --build    # rebuild after code changes
 ```
 
 - App: http://localhost:5173
@@ -53,7 +53,7 @@ docker-compose up --build    # rebuild after code changes
 Volume-mounted source code with live reload — no image rebuild needed.
 
 ```bash
-docker-compose --profile dev up
+docker compose --profile dev up
 ```
 
 - Frontend: Vite dev server with HMR at http://localhost:5173
@@ -65,7 +65,7 @@ docker-compose --profile dev up
 Separate PostgreSQL instance for test isolation.
 
 ```bash
-docker-compose --profile test up -d
+docker compose --profile test up -d
 ```
 
 - Uses `todo_test` database on a separate volume
@@ -74,10 +74,10 @@ docker-compose --profile test up -d
 ### Common commands
 
 ```bash
-docker-compose down          # stop all services
-docker-compose down -v       # stop and reset data
-docker-compose logs          # view logs
-docker-compose ps            # check service health
+docker compose down          # stop all services
+docker compose down -v       # stop and reset data
+docker compose logs          # view logs
+docker compose ps            # check service health
 ```
 
 Optionally copy `.env.example` to `.env` to customise credentials or ports.
@@ -116,6 +116,10 @@ pnpm -r test
 # E2E tests (Playwright, requires running dev servers)
 pnpm --filter e2e test
 ```
+
+## Documentation
+
+This project was built using the [BMAD Method](https://github.com/bmadcode/BMAD-METHOD) framework with AI assistance. See [Learning-BMAD-Notes.md](Learning-BMAD-Notes.md) for the AI integration log, development process notes, and lessons learned.
 
 ## Environment Variables
 

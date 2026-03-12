@@ -21,6 +21,8 @@ export const TaskInput = forwardRef<HTMLInputElement, TaskInputProps>(
         className="task-input"
         type="text"
         placeholder="add a task..."
+        aria-label="Add a new task"
+        maxLength={500}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}

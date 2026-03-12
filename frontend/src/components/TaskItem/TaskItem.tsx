@@ -27,11 +27,32 @@ export function TaskItem({ todo, onToggle, onDelete, isToggling, isDeleting, err
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+      e.preventDefault();
+      if (!isDeleting && !isToggling) {
+        onDelete(todo.id);
+      }
+    }
+  };
+
   return (
     <div className={className}>
-      <div className="task-item-row" onClick={handleClick}>
-        <HexCheckbox checked={todo.isCompleted} />
-        <span className="task-item-text">{todo.text}</span>
+      <div className="task-item-row">
+        <div
+          className="task-item-toggle"
+          role="checkbox"
+          aria-checked={todo.isCompleted}
+          tabIndex={0}
+          onClick={handleClick}
+          onKeyDown={handleKeyDown}
+        >
+          <HexCheckbox checked={todo.isCompleted} />
+          <span className="task-item-text">{todo.text}</span>
+        </div>
         <DeleteButton onDelete={() => onDelete(todo.id)} disabled={isDeleting || isToggling} />
       </div>
       {error && <ErrorMessage message={error} />}

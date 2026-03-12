@@ -38,6 +38,14 @@ describe('Design System', () => {
     }
   });
 
+  it('contrast-adjusted tokens have correct WCAG AA values', () => {
+    const indexCss = readFileSync(resolve(__dirname, 'index.css'), 'utf-8');
+    expect(indexCss).toContain('--color-placeholder: #826B4F');
+    expect(indexCss).toContain('--color-done-text: #7A6D5B');
+    expect(indexCss).toContain('--color-input-border: #A08862');
+    expect(indexCss).toContain('--color-hex-stroke: #9A8250');
+  });
+
   it('no component CSS contains hardcoded colour hex values', () => {
     const componentsDir = resolve(__dirname, 'components');
     const cssFiles = findCssFiles(componentsDir);

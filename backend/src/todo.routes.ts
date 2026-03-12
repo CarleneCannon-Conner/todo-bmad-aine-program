@@ -4,7 +4,7 @@ import { listTodos, createTodo, toggleTodo, deleteTodo } from './todo.service.js
 import type { ApiResponse, Todo } from '@todo/shared';
 
 const CreateTodoBody = Type.Object({
-  text: Type.String({ minLength: 1 }),
+  text: Type.String({ minLength: 1, maxLength: 500 }),
 });
 
 const ToggleTodoBody = Type.Object({

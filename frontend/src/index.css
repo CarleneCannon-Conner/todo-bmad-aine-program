@@ -7,11 +7,11 @@
   --color-error: #D32F2F;
   --color-hover: #FFF0D6;
   --color-hex-idle: #FFF5E5;
-  --color-hex-stroke: #D4B87A;
+  --color-hex-stroke: #9A8250;
   --color-hex-focus: #FFE8B8;
-  --color-done-text: #B8A68E;
-  --color-input-border: #E8D5B5;
-  --color-placeholder: #C4A97D;
+  --color-done-text: #7A6D5B;
+  --color-input-border: #A08862;
+  --color-placeholder: #826B4F;
 }
 
 *,
@@ -33,6 +33,15 @@ input,
 button,
 textarea {
   font-family: inherit;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
 }
 
 @media (min-width: 768px) {
