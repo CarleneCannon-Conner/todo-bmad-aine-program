@@ -9,11 +9,13 @@ interface TaskListProps {
   onDelete: (id: string) => void;
   togglingIds: Set<string>;
   deletingIds: Set<string>;
+  enteringIds?: Set<string>;
+  onEnteringAnimationEnd?: (id: string) => void;
   isLoading: boolean;
   itemErrors: Map<string, string>;
 }
 
-export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds, isLoading, itemErrors }: TaskListProps) {
+export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds, enteringIds, onEnteringAnimationEnd, isLoading, itemErrors }: TaskListProps) {
   if (isLoading && todos.length === 0) {
     return <LoadingSkeleton />;
   }
@@ -32,6 +34,8 @@ export function TaskList({ todos, onToggle, onDelete, togglingIds, deletingIds, 
             onDelete={onDelete}
             isToggling={togglingIds.has(todo.id)}
             isDeleting={deletingIds.has(todo.id)}
+            isEntering={enteringIds?.has(todo.id)}
+            onAnimationEnd={() => onEnteringAnimationEnd?.(todo.id)}
             error={itemErrors.get(todo.id)}
           />
         </li>

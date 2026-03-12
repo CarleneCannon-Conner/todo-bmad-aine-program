@@ -12,6 +12,12 @@
   --color-done-text: #7A6D5B;
   --color-input-border: #A08862;
   --color-placeholder: #826B4F;
+
+  /* Extended theme — celebration & delight (Story 7.4) */
+  --color-celebration: #FFD54F;
+  --color-celebration-bg: #FFF9E6;
+  --color-bee-body: #F5A623;
+  --color-bee-wing: #FFE8B8;
 }
 
 *,

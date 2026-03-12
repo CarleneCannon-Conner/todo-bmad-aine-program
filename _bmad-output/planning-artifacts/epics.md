@@ -2,6 +2,10 @@
 stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories, step-04-final-validation]
 workflowStatus: complete
 completedDate: '2026-03-12'
+lastEdited: '2026-03-12'
+editHistory:
+  - date: '2026-03-12'
+    changes: 'Added Epic 7: Enhancement & Delight (FR40-FR47) with 4 stories; updated FR Coverage Map and Epic List'
 inputDocuments:
   - project-context.md
   - _bmad-output/planning-artifacts/prd.md
@@ -59,6 +63,14 @@ FR36: Minimum 5 passing Playwright E2E tests covering core user flows
 FR37: Accessibility audit passes with zero critical WCAG AA violations
 FR38: Security review completed for common issues (XSS, injection); findings documented with remediations
 FR39: AI integration log documents agent usage, MCP server usage, test generation, debugging cases, and limitations encountered
+FR40: Application displays the existing bumble bee SVG as the browser tab favicon
+FR41: User can navigate to and interact with all task actions (add, complete, delete) using keyboard alone (Tab, Enter, Space, Escape)
+FR42: User can see a honeycomb-styled progress indicator showing completed tasks vs total tasks (e.g. "5/8 complete")
+FR43: New tasks animate into the list on creation (slide in); deleted tasks animate out (fade/slide out) with duration under 300ms
+FR44: A visual celebration animation (loop-de-loop bee) plays when a task is marked complete
+FR45: An "all clear" celebration state is displayed when the user completes the final remaining task; the state clears when a new task is added
+FR46: Clicking the static bee image at the top of the page triggers a playful visual reaction (easter egg)
+FR47: Application supports extended bumble bee theme variations (expanded palette, mascot variations beyond the MVP static image)
 
 ### NonFunctional Requirements
 
@@ -178,6 +190,14 @@ NFR16: Containers must report health status; unhealthy containers must be detect
 | FR37 | Epic 6 | WCAG AA accessibility audit — zero critical violations |
 | FR38 | Epic 6 | Security review — XSS, injection; documented remediations |
 | FR39 | Epic 6 | AI integration log |
+| FR40 | Epic 7 | Browser tab favicon (bee SVG) |
+| FR41 | Epic 7 | Full keyboard navigation |
+| FR42 | Epic 7 | Honeycomb progress indicator (X/Y tasks) |
+| FR43 | Epic 7 | Micro-animations on add/delete |
+| FR44 | Epic 7 | Task completion animation (loop-de-loop bee) |
+| FR45 | Epic 7 | "All clear" celebration state |
+| FR46 | Epic 7 | Bee easter egg interaction |
+| FR47 | Epic 7 | Extended bee theme (palette/mascot variations) |
 
 ## Epic List
 
@@ -230,6 +250,14 @@ The application meets quality gates for test coverage, accessibility, and securi
 **NFRs covered:** NFR12, NFR13, NFR14
 
 Test coverage gap analysis and improvement to 70% minimum, 5+ Playwright E2E tests, WCAG AA accessibility audit (contrast token updates, keyboard navigation, screen reader support, reduced motion), security review for OWASP top 10, and AI integration log.
+
+### Epic 7: Enhancement & Delight (Post Infrastructure & Quality)
+
+The app evolves from functional to delightful — with a favicon, keyboard navigation, progress tracking, micro-animations, celebration moments, and an interactive bee personality.
+
+**FRs covered:** FR40, FR41, FR42, FR43, FR44, FR45, FR46, FR47
+
+Browser tab favicon, full keyboard navigation for all task actions, honeycomb progress indicator (X/Y complete), smooth micro-animations on add/delete, loop-de-loop bee animation on completion, "all clear" celebration state, bee easter egg interaction, and extended theme variations.
 
 ## Epic 1: Project Foundation & First Task
 
@@ -937,3 +965,147 @@ So that the development process is transparent and lessons are captured.
 **And** WCAG AA audit shows zero critical violations
 **And** security review report is complete with zero unresolved critical/high findings
 **And** AI integration log is complete
+
+## Epic 7: Enhancement & Delight (Post Infrastructure & Quality)
+
+The app evolves from functional to delightful — with a favicon, keyboard navigation, progress tracking, micro-animations, celebration moments, and an interactive bee personality. Traceable to Journey 1 (Encore) in the PRD.
+
+### Story 7.1: Favicon & Honeycomb Progress Indicator
+
+As a **user**,
+I want to see the bee in my browser tab and know my progress at a glance,
+So that the app feels like mine and I can see how much I've accomplished.
+
+**Acceptance Criteria:**
+
+**Given** the app is loaded in a browser tab
+**When** I view the browser tab
+**Then** the existing bumble bee SVG is displayed as the favicon
+**And** the favicon is referenced in `index.html` using a standard `<link rel="icon">` tag
+
+**Given** tasks exist in the list (some complete, some incomplete)
+**When** I view the app
+**Then** a honeycomb-styled progress indicator displays "X/Y complete" (e.g. "5/8 complete")
+**And** the indicator uses the bee theme palette (`--color-accent`, `--color-text`)
+
+**Given** I complete or uncomplete a task
+**When** the task state changes
+**Then** the progress indicator updates immediately to reflect the new count
+
+**Given** all tasks are deleted (empty list)
+**When** I view the app
+**Then** the progress indicator is hidden (no "0/0" display)
+
+**Given** the favicon and progress indicator are complete
+**When** I run `pnpm --filter frontend test`
+**Then** tests verify: favicon link exists in index.html, progress indicator renders correct X/Y count, indicator updates on task toggle, indicator is hidden when list is empty
+
+### Story 7.2: Full Keyboard Navigation
+
+As a **user**,
+I want to manage all my tasks using only the keyboard,
+So that I can work efficiently without reaching for the mouse.
+
+**Acceptance Criteria:**
+
+**Given** the app is loaded
+**When** I press Tab
+**Then** focus moves sequentially through: TaskInput → AddButton (when active) → each TaskItem in list order
+**And** all focus indicators use `:focus-visible` with amber ring (`--color-accent`, 2px solid, offset 2px, border-radius 8px)
+**And** no focus ring appears on mouse click
+
+**Given** focus is on the TaskInput with text entered
+**When** I press Enter
+**Then** the task is submitted (existing behaviour, confirmed working with keyboard)
+
+**Given** focus is on a TaskItem
+**When** I press Enter or Space
+**Then** the task's completion state toggles (same as clicking)
+
+**Given** focus is on a TaskItem
+**When** I press Delete or Backspace
+**Then** the task is deleted (same as clicking the delete button)
+
+**Given** focus is on the AddButton and it is active
+**When** I press Enter or Space
+**Then** the task is submitted (same as clicking the AddButton)
+
+**Given** the user presses Escape while the TaskInput has focus
+**When** the input contains text
+**Then** the input is cleared and focus remains on the input
+
+**Given** keyboard navigation is complete
+**When** I run `pnpm --filter frontend test`
+**Then** tests verify: Tab order is correct (input → add button → task items), Enter/Space toggles task on focused TaskItem, Delete/Backspace deletes focused TaskItem, focus-visible ring appears on keyboard focus but not mouse click
+**And** E2E tests verify: full add → complete → delete flow using keyboard only
+
+### Story 7.3: Task Micro-Animations & Completion Animation
+
+As a **user**,
+I want to see smooth animations when tasks are added, deleted, and completed,
+So that interactions feel polished and satisfying.
+
+**Acceptance Criteria:**
+
+**Given** I add a new task
+**When** the task appears in the list
+**Then** it slides in with a smooth animation (duration under 300ms)
+**And** the animation uses CSS transitions (no JavaScript animation library)
+
+**Given** I delete a task
+**When** the task is removed from the list
+**Then** it fades and slides out with a smooth animation (duration under 300ms)
+**And** the remaining tasks reflow smoothly without jarring jumps
+
+**Given** I mark a task as complete
+**When** the hex checkbox fills
+**Then** a loop-de-loop bee celebration animation plays near the completed task
+**And** the animation is brief (under 500ms) and does not block interaction
+**And** the animation is CSS/SVG-based, not a GIF or video
+
+**Given** the user has `prefers-reduced-motion: reduce` enabled
+**When** any add, delete, or completion animation would play
+**Then** all `transition-duration` and `animation-duration` are set to `0.01s` — state changes remain visible but happen instantly
+
+**Given** micro-animations are complete
+**When** I run `pnpm --filter frontend test`
+**Then** tests verify: new task has slide-in CSS class applied, deleted task has slide-out CSS class applied, completion triggers bee animation class, prefers-reduced-motion media query is respected
+
+### Story 7.4: All Clear Celebration, Bee Easter Egg & Theme Evolution
+
+As a **user**,
+I want delightful surprises and a sense of personality in the app,
+So that completing my tasks feels rewarding and the app makes me smile.
+
+**Acceptance Criteria:**
+
+**Given** I complete the final remaining task in my list (all tasks now complete, none incomplete)
+**When** the last task is checked off
+**Then** an "all clear" celebration state is displayed (e.g. animated bee celebration, congratulatory visual)
+**And** the celebration is visually distinct and noticeable but not disruptive
+**And** the celebration does not block continued use of the app
+
+**Given** the "all clear" celebration is displayed
+**When** I add a new task
+**Then** the celebration state clears immediately and the normal list view returns
+
+**Given** the static bee image is displayed at the top of the page
+**When** I click the bee
+**Then** a playful visual reaction is triggered (e.g. bee wiggles, spins, bounces, changes expression)
+**And** the reaction is brief and delightful — an easter egg, not a feature
+**And** the reaction does not interfere with any other UI elements
+
+**Given** the extended theme is being applied
+**When** I view the app
+**Then** the bee theme supports expanded palette variations and mascot variations beyond the static MVP image
+**And** theme variations are driven by CSS custom properties (extensible without code changes)
+**And** existing design tokens are preserved — new tokens are additive
+
+**Given** the user has `prefers-reduced-motion: reduce` enabled
+**When** the "all clear" celebration or bee easter egg would animate
+**Then** animations are reduced to near-instant (0.01s) — the state change is visible but not animated
+
+**Given** all delight features are complete
+**When** I run `pnpm --filter frontend test`
+**Then** tests verify: "all clear" celebration renders when last task is completed, celebration clears when new task is added, clicking bee triggers easter egg reaction, extended theme tokens are defined in :root
+**And** E2E tests verify: completing all tasks triggers celebration, clicking bee triggers easter egg

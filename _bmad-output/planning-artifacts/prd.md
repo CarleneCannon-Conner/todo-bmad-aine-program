@@ -5,6 +5,10 @@ completedDate: '2026-03-05'
 lastEdited: '2026-03-12'
 editHistory:
   - date: '2026-03-12'
+    changes: 'Promoted Nice to Have items into traceable Enhancement & Delight phase (follows Epic 6); extended Journey 1 with Encore scene; added FR40-FR47 (favicon, keyboard nav, progress indicator, micro-animations, completion animation, all-clear state, bee easter egg, theme evolution); updated Journey Requirements Summary table'
+  - date: '2026-03-12'
+    changes: 'Added Nice to Have item: bumble bee SVG as browser tab favicon'
+  - date: '2026-03-12'
     changes: 'Post-MVP edit: added Infrastructure & Quality phase (training Steps 3-4) with FR30-FR39 and NFRs; restructured scope tiers (Post-MVP > Growth > Nice to Have); removed Session-based completion counter; moved untraceable items to Nice to Have; removed Experience MVP framing and bee theme language from Executive Summary and Success Criteria; added post-MVP success criteria'
   - date: '2026-03-11'
     changes: 'Readiness review: FR9 simplified — single placeholder "add a task..." at all times (no conditional text based on list state); Journey 2C updated; MVP scope updated'
@@ -133,17 +137,18 @@ Simplicity is the product's strongest feature. Every design and technical decisi
 - Deadlines and due dates
 - Notifications
 
-### Nice to Have (Untraceable)
+### Enhancement & Delight (Post Infrastructure & Quality)
 
-> **Not derived from original PRD or training instructions. Do not implement unless explicitly prioritised.**
+> **Polish and delight features that elevate the core experience. Follows on from Epic 6. Traceable to Journey 1 extension.**
 
-- Bumble bee theme evolution (palette, mascot beyond current MVP implementation)
-- Loop-de-loop bee animation on task completion
-- "All clear" celebration state when final task is completed
+- Browser tab favicon using existing bumble bee SVG
+- Full keyboard navigation for all task actions (add, complete, delete)
+- Honeycomb progress indicator displaying tasks complete vs total (X/Y)
 - Smooth micro-animations: tasks slide in on add, fade/slide out on delete
-- Honeycomb progress indicator (X/Y tasks complete)
+- Task completion animation (loop-de-loop bee animation on check)
+- "All clear" celebration state when the final task is completed
 - Bee easter egg: clicking the static bee triggers a playful reaction
-- Keyboard navigation
+- Bumble bee theme evolution (extended palette, mascot variations beyond MVP)
 
 ### Risk Mitigation
 
@@ -169,7 +174,10 @@ Seven of her eleven tasks are done. The two long-running items — a roadmap ite
 **Resolution**
 She closes her laptop. No sticky notes today. The remaining tasks will be there tomorrow. She felt in control of her day without the app ever getting in her way.
 
-*Capabilities revealed: persistent todo list across sessions, visual distinction between complete/incomplete, fast task entry, responsive on desktop and mobile.*
+**Encore — The Little Things**
+Carlene notices the bumble bee favicon in her browser tab — it's small but it makes the app feel like hers. She uses Tab and Enter to knock out three quick tasks without touching the mouse. A honeycomb progress indicator shows 9/11 complete — satisfying. When she checks off the last item, a brief "all clear" celebration appears. She clicks the static bee at the top of the page out of curiosity — it does something playful. She smiles. The app isn't just functional; it has personality.
+
+*Capabilities revealed: browser tab favicon, full keyboard navigation, progress indicator (X/Y tasks complete), micro-animations on add/delete, task completion animation, "all clear" celebration state, bee easter egg interaction, extended bee theme.*
 
 ---
 
@@ -225,6 +233,14 @@ Alex deploys to a simple hosting environment. No exotic infrastructure required.
 | Clear setup documentation | Journey 3 |
 | Conventional, readable codebase | Journey 3 |
 | Minimal, documented API | Journey 3 |
+| Browser tab favicon (bee SVG) | Journey 1 (Encore) |
+| Full keyboard navigation | Journey 1 (Encore) |
+| Progress indicator (X/Y tasks complete) | Journey 1 (Encore) |
+| Micro-animations on add/delete | Journey 1 (Encore) |
+| Task completion animation | Journey 1 (Encore) |
+| "All clear" celebration state | Journey 1 (Encore) |
+| Bee easter egg interaction | Journey 1 (Encore) |
+| Extended bee theme (palette/mascot) | Journey 1 (Encore) |
 
 ## Web Application Specific Requirements
 
@@ -310,6 +326,17 @@ Alex deploys to a simple hosting environment. No exotic infrastructure required.
 ### Documentation (Post-MVP)
 
 - FR39: AI integration log documents agent usage, MCP server usage, test generation, debugging cases, and limitations encountered
+
+### Enhancement & Delight (Post Infrastructure & Quality)
+
+- FR40: Application displays the existing bumble bee SVG as the browser tab favicon
+- FR41: User can navigate to and interact with all task actions (add, complete, delete) using keyboard alone (Tab, Enter, Space, Escape)
+- FR42: User can see a honeycomb-styled progress indicator showing completed tasks vs total tasks (e.g. "5/8 complete")
+- FR43: New tasks animate into the list on creation (slide in); deleted tasks animate out (fade/slide out) with duration under 300ms
+- FR44: A visual celebration animation (loop-de-loop bee) plays when a task is marked complete
+- FR45: An "all clear" celebration state is displayed when the user completes the final remaining task; the state clears when a new task is added
+- FR46: Clicking the static bee image at the top of the page triggers a playful visual reaction (easter egg)
+- FR47: Application supports extended bumble bee theme variations (expanded palette, mascot variations beyond the MVP static image)
 
 ## Non-Functional Requirements
 

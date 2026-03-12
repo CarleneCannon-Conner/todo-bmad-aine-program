@@ -1,0 +1,17 @@
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.progress-hex-icon {
+  flex-shrink: 0;
+}
+
+.progress-text {
+  font-size: 1rem;
+  color: var(--color-text);
+}

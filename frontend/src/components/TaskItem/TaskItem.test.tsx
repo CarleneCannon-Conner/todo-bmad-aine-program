@@ -161,4 +161,74 @@ describe('TaskItem', () => {
     expect(onToggle).not.toHaveBeenCalled();
     expect(onDelete).not.toHaveBeenCalled();
   });
+
+  it('applies task-item--entering class when isEntering is true', () => {
+    const { container } = render(
+      <TaskItem {...defaultProps} isEntering={true} />,
+    );
+    expect(container.querySelector('.task-item--entering')).toBeTruthy();
+  });
+
+  it('does not apply task-item--entering class by default', () => {
+    const { container } = render(
+      <TaskItem {...defaultProps} />,
+    );
+    expect(container.querySelector('.task-item--entering')).toBeNull();
+  });
+
+  it('renders BeeAnimation when task transitions from incomplete to complete', () => {
+    const incompleteTodo = { ...mockTodo, isCompleted: false };
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    const { container, rerender } = render(
+      <TaskItem {...defaultProps} todo={incompleteTodo} />,
+    );
+    expect(container.querySelector('.bee-animation')).toBeNull();
+
+    rerender(<TaskItem {...defaultProps} todo={completedTodo} />);
+    expect(container.querySelector('.bee-animation')).toBeTruthy();
+  });
+
+  it('does not render BeeAnimation on initial load for already-completed tasks', () => {
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    const { container } = render(
+      <TaskItem {...defaultProps} todo={completedTodo} />,
+    );
+    expect(container.querySelector('.bee-animation')).toBeNull();
+  });
+
+  it('does not render BeeAnimation when uncompleting a task', () => {
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    const incompleteTodo = { ...mockTodo, isCompleted: false };
+    const { container, rerender } = render(
+      <TaskItem {...defaultProps} todo={completedTodo} />,
+    );
+
+    rerender(<TaskItem {...defaultProps} todo={incompleteTodo} />);
+    expect(container.querySelector('.bee-animation')).toBeNull();
+  });
+
+  it('calls onAnimationEnd when entering animation completes', () => {
+    const onAnimationEnd = vi.fn();
+    const { container } = render(
+      <TaskItem {...defaultProps} isEntering={true} onAnimationEnd={onAnimationEnd} />,
+    );
+    const taskItem = container.querySelector('.task-item--entering')!;
+    fireEvent.animationEnd(taskItem);
+    expect(onAnimationEnd).toHaveBeenCalled();
+  });
+
+  it('removes BeeAnimation after its animation ends', () => {
+    const incompleteTodo = { ...mockTodo, isCompleted: false };
+    const completedTodo = { ...mockTodo, isCompleted: true };
+    const { container, rerender } = render(
+      <TaskItem {...defaultProps} todo={incompleteTodo} />,
+    );
+
+    rerender(<TaskItem {...defaultProps} todo={completedTodo} />);
+    const bee = container.querySelector('.bee-animation')!;
+    expect(bee).toBeTruthy();
+
+    fireEvent.animationEnd(bee);
+    expect(container.querySelector('.bee-animation')).toBeNull();
+  });
 });

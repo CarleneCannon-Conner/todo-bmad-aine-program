@@ -67,6 +67,11 @@ export function useTodos() {
   const deleteTodo = async (id: string) => {
     setDeletingIds(prev => new Set(prev).add(id));
 
+    // Delay optimistic removal so the CSS delete animation + height collapse plays before the DOM element is removed
+    // Skip delay when user prefers reduced motion (animations complete in ~0.01s)
+    const prefersReducedMotion = typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    await new Promise(r => setTimeout(r, prefersReducedMotion ? 0 : 300));
+
     try {
       await mutate(
         async () => {

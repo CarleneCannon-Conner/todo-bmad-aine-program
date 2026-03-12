@@ -1,0 +1,31 @@
+.all-clear {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  background-color: var(--color-celebration-bg);
+  border-radius: 12px;
+  margin: 1rem 0;
+}
+
+.all-clear-bee {
+  width: 60px;
+  height: 60px;
+  animation: celebration-dance 1.5s ease-in-out infinite;
+}
+
+@keyframes celebration-dance {
+  0%   { transform: translateY(0) rotate(0deg); }
+  20%  { transform: translateY(-8px) rotate(-5deg); }
+  40%  { transform: translateY(0) rotate(5deg); }
+  60%  { transform: translateY(-6px) rotate(-3deg); }
+  80%  { transform: translateY(0) rotate(3deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.all-clear-text {
+  margin: 0.75rem 0 0;
+  font-size: 1.5rem;
+  color: var(--color-celebration);
+  font-weight: 400;
+}

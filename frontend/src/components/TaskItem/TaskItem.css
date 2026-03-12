@@ -51,6 +51,21 @@
   pointer-events: none;
 }
 
+@keyframes task-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-item--entering {
+  animation: task-slide-in 250ms ease-out;
+}
+
 .task-item > .error-message {
   padding: 0 0.5rem 0.25rem;
 }

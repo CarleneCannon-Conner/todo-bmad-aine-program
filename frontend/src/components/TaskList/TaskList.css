@@ -6,8 +6,16 @@
 
 .task-list-item {
   margin-bottom: 6px;
+  max-height: 200px;
+  overflow: hidden;
+  transition: max-height 0.15s ease 0.1s, margin-bottom 0.15s ease 0.1s;
 }
 
 .task-list-item:last-child {
+  margin-bottom: 0;
+}
+
+.task-list-item:has(.task-item--deleting) {
+  max-height: 0;
   margin-bottom: 0;
 }

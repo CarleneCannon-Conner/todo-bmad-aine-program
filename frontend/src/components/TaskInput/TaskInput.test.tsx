@@ -52,4 +52,18 @@ describe('TaskInput', () => {
     render(<TaskInput {...defaultProps} />);
     expect(screen.getByLabelText('Add a new task')).toBeTruthy();
   });
+
+  it('Escape clears text and calls onChange with empty string', () => {
+    const onChange = vi.fn();
+    render(<TaskInput {...defaultProps} value="Some text" onChange={onChange} />);
+    fireEvent.keyDown(screen.getByPlaceholderText('add a task...'), { key: 'Escape' });
+    expect(onChange).toHaveBeenCalledWith('');
+  });
+
+  it('Escape does nothing when input is empty', () => {
+    const onChange = vi.fn();
+    render(<TaskInput {...defaultProps} value="" onChange={onChange} />);
+    fireEvent.keyDown(screen.getByPlaceholderText('add a task...'), { key: 'Escape' });
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });

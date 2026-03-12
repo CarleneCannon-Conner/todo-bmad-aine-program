@@ -12,6 +12,8 @@ export const TaskInput = forwardRef<HTMLInputElement, TaskInputProps>(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         onSubmit();
+      } else if (e.key === 'Escape' && value) {
+        onChange('');
       }
     };
 

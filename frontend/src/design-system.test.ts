@@ -46,6 +46,13 @@ describe('Design System', () => {
     expect(indexCss).toContain('--color-hex-stroke: #9A8250');
   });
 
+  it('prefers-reduced-motion media query sets animation and transition duration to 0.01s', () => {
+    const indexCss = readFileSync(resolve(__dirname, 'index.css'), 'utf-8');
+    expect(indexCss).toContain('@media (prefers-reduced-motion: reduce)');
+    expect(indexCss).toContain('transition-duration: 0.01s !important');
+    expect(indexCss).toContain('animation-duration: 0.01s !important');
+  });
+
   it('no component CSS contains hardcoded colour hex values', () => {
     const componentsDir = resolve(__dirname, 'components');
     const cssFiles = findCssFiles(componentsDir);
