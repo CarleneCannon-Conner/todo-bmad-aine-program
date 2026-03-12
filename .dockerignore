@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.*
+!.env.example
+dist
+.git
+e2e
+_bmad*
+.claude
+*.md
+!README.md
+.DS_Store

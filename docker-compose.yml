@@ -1,0 +1,128 @@
+services:
+  # === Always-on services ===
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-todo}
+      POSTGRES_USER: ${POSTGRES_USER:-todo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-todo_pass}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-todo_user} -d ${POSTGRES_DB:-todo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # === Production-like services (default, no profile) ===
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-todo_user}:${POSTGRES_PASSWORD:-todo_pass}@db:5432/${POSTGRES_DB:-todo}
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # === Dev profile services ===
+  backend-dev:
+    profiles: [dev]
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+      - ./package.json:/app/package.json
+      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - backend_node_modules:/app/node_modules
+    command: sh -c "corepack enable && pnpm install && pnpm --filter backend migrate && pnpm --filter backend dev"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-todo_user}:${POSTGRES_PASSWORD:-todo_pass}@db:5432/${POSTGRES_DB:-todo}
+      PORT: 3000
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend-dev:
+    profiles: [dev]
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app/frontend
+      - ./shared:/app/shared
+      - ./package.json:/app/package.json
+      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - frontend_node_modules:/app/node_modules
+    command: sh -c "corepack enable && pnpm install && pnpm --filter frontend dev --host"
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend-dev:
+        condition: service_started
+    environment:
+      VITE_API_PROXY_TARGET: http://backend-dev:3000
+    restart: unless-stopped
+
+  # === Test profile services ===
+  db-test:
+    profiles: [test]
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB:-todo_test}
+      POSTGRES_USER: ${POSTGRES_USER:-todo_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-todo_pass}
+    volumes:
+      - pgdata-test:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-todo_user} -d ${POSTGRES_TEST_DB:-todo_test}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend-test:
+    profiles: [test]
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./backend:/app/backend
+      - ./shared:/app/shared
+      - ./package.json:/app/package.json
+      - ./pnpm-workspace.yaml:/app/pnpm-workspace.yaml
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+    command: sh -c "corepack enable && pnpm install && pnpm --filter backend migrate && pnpm --filter backend dev"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-todo_user}:${POSTGRES_PASSWORD:-todo_pass}@db-test:5432/${POSTGRES_TEST_DB:-todo_test}
+      PORT: 3001
+    depends_on:
+      db-test:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  pgdata-test:
+  backend_node_modules:
+  frontend_node_modules:

@@ -1,7 +1,8 @@
-import Fastify from 'fastify';
+import Fastify, { type FastifyError } from 'fastify';
 import type { ApiResponse } from '@todo/shared';
 import { ValidationError, NotFoundError } from './todo.service.js';
 import dbPlugin from './db.js';
+import healthRoutes from './health.routes.js';
 import todoRoutes from './todo.routes.js';
 
 export async function buildApp(opts: { logger?: boolean } = {}) {
@@ -17,7 +18,7 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
   });
 
   // Global error handler — catches all unhandled errors
-  app.setErrorHandler(async (error, request, reply) => {
+  app.setErrorHandler(async (error: FastifyError, request, reply) => {
     if (error.validation) {
       const response: ApiResponse<never> = {
         success: false,
@@ -48,6 +49,7 @@ export async function buildApp(opts: { logger?: boolean } = {}) {
   });
 
   await app.register(dbPlugin);
+  await app.register(healthRoutes, { prefix: '/api' });
   await app.register(todoRoutes, { prefix: '/api/todos' });
 
   return app;

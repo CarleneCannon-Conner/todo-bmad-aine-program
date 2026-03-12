@@ -2,8 +2,10 @@
 stepsCompleted: [step-01-init, step-02-discovery, step-02b-vision, step-02c-executive-summary, step-03-success, step-04-journeys, step-05-domain, step-06-innovation, step-07-project-type, step-08-scoping, step-09-functional, step-10-nonfunctional, step-11-polish, step-12-complete]
 workflowStatus: complete
 completedDate: '2026-03-05'
-lastEdited: '2026-03-11'
+lastEdited: '2026-03-12'
 editHistory:
+  - date: '2026-03-12'
+    changes: 'Post-MVP edit: added Infrastructure & Quality phase (training Steps 3-4) with FR30-FR39 and NFRs; restructured scope tiers (Post-MVP > Growth > Nice to Have); removed Session-based completion counter; moved untraceable items to Nice to Have; removed Experience MVP framing and bee theme language from Executive Summary and Success Criteria; added post-MVP success criteria'
   - date: '2026-03-11'
     changes: 'Readiness review: FR9 simplified — single placeholder "add a task..." at all times (no conditional text based on list state); Journey 2C updated; MVP scope updated'
   - date: '2026-03-11'
@@ -30,15 +32,11 @@ classification:
 
 ## Executive Summary
 
-A lightweight, full-stack web application for personal task management. Built for individual users who want to capture, track, and complete tasks without onboarding friction or feature bloat. The product prioritizes speed, clarity, and interaction feel over feature richness — the goal is a tool users *enjoy* using, not just one they tolerate.
+A lightweight, full-stack web application for personal task management. Built for individual users who want to capture, track, and complete tasks without onboarding friction or feature bloat. The product prioritizes clarity, ease of use, and reliability over feature richness.
 
 Core task-management actions — create, view, complete, delete — are available immediately on load. No auth required. No configuration. The interface communicates state visually at a glance, handles empty/loading/error conditions gracefully, and works across desktop and mobile without degradation.
 
-### What Makes This Special
-
-Most todo apps are functional but joyless. This one is designed around *feel*. The bumble bee theme — muted palette, warm character, satisfying micro-interactions — gives the product a distinct personality without adding noise or complexity. The defining moment: the tactile satisfaction of marking something done. That small reward is the loop that makes users return.
-
-The core insight: simplicity isn't a constraint imposed by scope — it's the product's strongest feature. Every design and technical decision is in service of a clean, fast, delightful experience.
+Simplicity is the product's strongest feature. Every design and technical decision is in service of a clean, reliable core experience that can be extended in the future if needed.
 
 ## Project Classification
 
@@ -59,8 +57,7 @@ The core insight: simplicity isn't a constraint imposed by scope — it's the pr
 
 ### Business Success
 
-- The app feels like a complete, polished product despite its minimal scope
-- The bumble bee theme delivers warmth and personality without adding noise — a user notices and appreciates the aesthetic without being distracted by it
+- The app feels like a complete, usable product despite its deliberately minimal scope
 - Users can accomplish all core actions without reading any help text or documentation
 
 ### Technical Success
@@ -75,11 +72,19 @@ The core insight: simplicity isn't a constraint imposed by scope — it's the pr
 - All CRUD operations complete in <200ms
 - Todo data survives page refresh with zero loss
 
+### Post-MVP Success Criteria (from training instructions)
+
+- Application runs successfully via `docker-compose up`
+- Minimum 70% meaningful test coverage
+- Minimum 5 passing Playwright E2E tests
+- Zero critical WCAG violations
+- README with setup instructions and AI integration log
+
 ## Product Scope
 
 ### MVP Strategy & Philosophy
 
-**MVP Approach:** Experience MVP — the minimum version must be not just functional but genuinely satisfying to use. The bumble bee theme and interaction quality are not enhancements; they are core to what makes this product worth using.
+**MVP Approach:** Deliver a clean, reliable core experience — the minimum version must be functional, stable, and clear. Every design and technical decision serves simplicity and usability.
 
 **Core Journeys Supported in MVP:**
 - Carlene — Daily Driver (full success path)
@@ -99,25 +104,46 @@ The core insight: simplicity isn't a constraint imposed by scope — it's the pr
 - Empty, loading, and error states
 - No auth, no user accounts
 
-### Growth Features (Post-MVP)
+### Post-MVP: Infrastructure & Quality
+
+> **Next phase. Ordered by training instruction steps. Must be completed before Growth features.**
+
+**Step 3 — Containerisation:**
+- Dockerfiles for frontend and backend (multi-stage builds, non-root users)
+- docker-compose.yml orchestrating all containers (networking, volumes, environment config)
+- Health check endpoints — containers report health status, logs accessible via docker-compose logs
+- Compose profiles supporting dev/test environments via environment variables
+
+**Step 4 — Quality Assurance:**
+- Test coverage analysis and gap identification (minimum 70% meaningful coverage)
+- Performance testing via Chrome DevTools; document findings
+- Accessibility audit (WCAG AA compliance via Lighthouse or axe-core, automated via Playwright)
+- Security review for common issues (XSS, injection); document findings and remediations
+
+**Documentation:**
+- AI integration log: agent usage, MCP server usage, test generation, debugging cases, limitations encountered
+
+### Growth Features (Future)
+
+> **From original PRD — may be considered in future iterations after Infrastructure & Quality phase is complete.**
 
 - User accounts and authentication
 - Multi-user collaboration
 - Task prioritisation
 - Deadlines and due dates
 - Notifications
-- Keyboard navigation
 
-### Vision (Future — Lowest Priority)
+### Nice to Have (Untraceable)
 
-> **Out of scope for MVP and Growth phases. Do not implement regardless of perceived effort.**
+> **Not derived from original PRD or training instructions. Do not implement unless explicitly prioritised.**
 
+- Bumble bee theme evolution (palette, mascot beyond current MVP implementation)
 - Loop-de-loop bee animation on task completion
 - "All clear" celebration state when final task is completed
 - Smooth micro-animations: tasks slide in on add, fade/slide out on delete
 - Honeycomb progress indicator (X/Y tasks complete)
 - Bee easter egg: clicking the static bee triggers a playful reaction
-- Session-based completion counter
+- Keyboard navigation
 
 ### Risk Mitigation
 
@@ -256,8 +282,8 @@ Alex deploys to a simple hosting environment. No exotic infrastructure required.
 
 ### Visual Design & Theme
 
-- FR21: Application displays a bumble bee themed colour palette
-- FR22: Application displays a static bumble bee image prominently at the top of the page
+- FR21: Application displays a bumble bee themed colour palette *(Nice to Have origin — not from original PRD; implemented during MVP)*
+- FR22: Application displays a static bumble bee image prominently at the top of the page *(Nice to Have origin — not from original PRD; implemented during MVP)*
 - FR23: Application layout adapts to desktop and mobile screen sizes without degradation
 
 ### Developer & Operator
@@ -265,6 +291,25 @@ Alex deploys to a simple hosting environment. No exotic infrastructure required.
 - FR24: Developer can clone the repository and run the application locally using a documented setup process
 - FR25: Developer can understand the project structure and API surface without additional documentation beyond the README
 - FR26: System exposes a small, well-defined API for all todo CRUD operations
+
+### Containerisation (Post-MVP — Step 3)
+
+- FR30: Application runs via `docker-compose up` with frontend, backend, and database containers orchestrated
+- FR31: Dockerfiles use multi-stage builds with non-root users
+- FR32: Backend exposes a health check endpoint; containers report health status via Docker health checks
+- FR33: Compose profiles support dev and test environments via environment variables
+- FR34: Container logs are accessible via `docker-compose logs`
+
+### Quality Assurance (Post-MVP — Step 4)
+
+- FR35: Test suite achieves minimum 70% meaningful code coverage
+- FR36: Minimum 5 passing Playwright E2E tests covering core user flows
+- FR37: Accessibility audit passes with zero critical WCAG AA violations
+- FR38: Security review completed for common issues (XSS, injection); findings documented with remediations
+
+### Documentation (Post-MVP)
+
+- FR39: AI integration log documents agent usage, MCP server usage, test generation, debugging cases, and limitations encountered
 
 ## Non-Functional Requirements
 
@@ -283,14 +328,24 @@ Alex deploys to a simple hosting environment. No exotic infrastructure required.
 
 ### Maintainability
 
-- Codebase must follow conventional, predictable structure requiring no explanation beyond the README
-- Setup from clone to running locally must be achievable by a developer unfamiliar with the codebase
-- The API surface must be small and self-evident; adding a new field to a todo item must be straightforward from existing patterns
+- A developer unfamiliar with the codebase can locate any feature's implementation within 3 files (route, service, component)
+- Setup from clone to running locally must be achievable by following the README alone — no additional documentation or tribal knowledge required
+- Adding a new field to a todo item requires changes in no more than 4 files (schema, types, backend service/route, frontend component)
 
 ### Accessibility
 
-- MVP: No formal accessibility compliance required
-- Post-MVP: Application must support full keyboard navigation for all core actions (add, complete, delete)
+- MVP: No formal accessibility compliance required; semantic HTML included as zero-cost default
+- Post-MVP: WCAG AA compliance — zero critical violations as measured by Lighthouse or axe-core automated audit via Playwright
+
+### Security (Post-MVP)
+
+- Zero unresolved critical or high severity findings from OWASP top 10 review (XSS, injection, etc.)
+- All findings documented with remediations applied; review report produced as deliverable
+
+### Containerisation (Post-MVP)
+
+- Application must start and be fully functional via a single `docker-compose up` command
+- Containers must report health status; unhealthy containers must be detectable via `docker-compose ps`
 
 ## Open Questions & Design Notes
 

@@ -65,7 +65,8 @@ Steps being followed (company instructions):
 - Found a bug in development — attempting to create a bug story to see what happens. It created a new bug story successfully that I was able to run the dev and review commands on as usual. However, it doesn't come up in sprint status.
 - Ah, because the bug isn't in sprint planning, it couldn't be found by the command `code review`. However, I simply told it there is a bug, so it searched for it.
 - Found a second bug. This time when I reported it, I let BMAD know it hadn't tracked the previous bug. It fixed this error — now both bugs are tracked in sprint-status.yaml. So `code review` should work this time.
-- Completed MVP. Will move onto post-MVP.
+- Completed MVP. Moving onto post-MVP by running `/bmad-bmm-edit-prd`.
+- Post-MVP is challenging because it is mixing up actual requirements with the 'feelings questions' it asked previously. It's hard for me to keep track. One of the feelings questions I am referring to is "What Makes This Special", which led me down the path to give the todo app a bee theme — it isn't in either the original PRD or the instructions for this create-todo-app-with-BMAD task.
 
 ---
 

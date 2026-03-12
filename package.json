@@ -6,6 +6,7 @@
     "dev:frontend": "pnpm --filter frontend dev",
     "dev:backend": "pnpm --filter backend dev",
     "test": "pnpm -r --filter '!e2e' test",
+    "test:coverage": "pnpm -r --filter '!e2e' test:coverage",
     "test:e2e": "pnpm --filter e2e test"
   },
   "pnpm": {

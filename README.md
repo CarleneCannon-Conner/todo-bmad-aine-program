@@ -31,6 +31,57 @@ pnpm -r dev
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
+## Running with Docker
+
+Requires [Docker](https://docs.docker.com/get-docker/) installed. Run **one mode at a time** — `docker-compose down` before switching.
+
+### Production-like mode (default)
+
+Built images, nginx serving frontend, optimised for testing deployment.
+
+```bash
+docker-compose up            # start all services
+docker-compose up --build    # rebuild after code changes
+```
+
+- App: http://localhost:5173
+- Migrations run automatically on backend startup
+- First build may take a few minutes; subsequent starts are fast
+
+### Dev mode (hot reload)
+
+Volume-mounted source code with live reload — no image rebuild needed.
+
+```bash
+docker-compose --profile dev up
+```
+
+- Frontend: Vite dev server with HMR at http://localhost:5173
+- Backend: `tsx watch` with auto-restart on file changes
+- Edit source files locally — changes reflect immediately in containers
+
+### Test mode (isolated database)
+
+Separate PostgreSQL instance for test isolation.
+
+```bash
+docker-compose --profile test up -d
+```
+
+- Uses `todo_test` database on a separate volume
+- Backend-test runs on port 3001 (internal)
+
+### Common commands
+
+```bash
+docker-compose down          # stop all services
+docker-compose down -v       # stop and reset data
+docker-compose logs          # view logs
+docker-compose ps            # check service health
+```
+
+Optionally copy `.env.example` to `.env` to customise credentials or ports.
+
 ## Project Structure
 
 ```
@@ -50,6 +101,7 @@ All endpoints return an `ApiResponse<T>` envelope:
 
 | Method | Path | Description | Status Codes |
 |--------|------|-------------|-------------|
+| GET | `/api/health` | Health check | 200 |
 | GET | `/api/todos` | List all todos (newest first) | 200 |
 | POST | `/api/todos` | Create a new todo | 201, 400 |
 | PATCH | `/api/todos/:id` | Toggle completion status (Epic 2) | 200, 404 |

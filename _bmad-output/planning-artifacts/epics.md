@@ -1,7 +1,7 @@
 ---
-stepsCompleted: [step-01, step-02, step-03, step-04]
+stepsCompleted: [step-01-validate-prerequisites, step-02-design-epics, step-03-create-stories, step-04-final-validation]
 workflowStatus: complete
-completedDate: '2026-03-11'
+completedDate: '2026-03-12'
 inputDocuments:
   - project-context.md
   - _bmad-output/planning-artifacts/prd.md
@@ -49,6 +49,16 @@ FR26: System exposes a small, well-defined API for all todo CRUD operations
 FR27: User can enter todo items of variable length; long text wraps gracefully without breaking layout or obscuring completion and delete controls
 FR28: Actions on a specific task item are disabled while a request for that item is in-flight; other task items remain fully interactive
 FR29: Empty input is rejected client-side without an API call; leading and trailing whitespace is trimmed before submission
+FR30: Application runs via `docker-compose up` with frontend, backend, and database containers orchestrated
+FR31: Dockerfiles use multi-stage builds with non-root users
+FR32: Backend exposes a health check endpoint; containers report health status via Docker health checks
+FR33: Compose profiles support dev and test environments via environment variables
+FR34: Container logs are accessible via `docker-compose logs`
+FR35: Test suite achieves minimum 70% meaningful code coverage
+FR36: Minimum 5 passing Playwright E2E tests covering core user flows
+FR37: Accessibility audit passes with zero critical WCAG AA violations
+FR38: Security review completed for common issues (XSS, injection); findings documented with remediations
+FR39: AI integration log documents agent usage, MCP server usage, test generation, debugging cases, and limitations encountered
 
 ### NonFunctional Requirements
 
@@ -63,6 +73,11 @@ NFR8: Codebase must follow conventional, predictable structure requiring no expl
 NFR9: Setup from clone to running locally must be achievable by a developer unfamiliar with the codebase
 NFR10: The API surface must be small and self-evident; adding a new field to a todo item must be straightforward from existing patterns
 NFR11: MVP: No formal accessibility compliance required; semantic HTML included as zero-cost default. MVP uses original design palette values; WCAG contrast-adjusted tokens (placeholder, done-text, input-border, hex-stroke) deferred to post-MVP alongside keyboard navigation and WCAG AA work
+NFR12: Post-MVP: WCAG AA compliance — zero critical violations as measured by Lighthouse or axe-core automated audit via Playwright
+NFR13: Zero unresolved critical or high severity findings from OWASP top 10 review (XSS, injection, etc.)
+NFR14: All security findings documented with remediations applied; review report produced as deliverable
+NFR15: Application must start and be fully functional via a single `docker-compose up` command
+NFR16: Containers must report health status; unhealthy containers must be detectable via `docker-compose ps`
 
 ### Additional Requirements
 
@@ -106,6 +121,12 @@ NFR11: MVP: No formal accessibility compliance required; semantic HTML included 
 - No confirmation dialog on delete (Carlene's explicit preference)
 - Error colour: standard red (#D32F2F), not theme-derived — clarity wins over palette harmony
 
+**From UX Design (Post-MVP Accessibility):**
+- WCAG contrast-adjusted tokens: update 4 tokens (--color-placeholder: #826B4F, --color-done-text: #7A6D5B, --color-input-border: #A08862, --color-hex-stroke: #9A8250) alongside keyboard navigation and WCAG AA work
+- Keyboard accessibility: Tab between TaskInput and TaskItems, Enter/Space toggles task, Delete/Backspace removes task, :focus-visible with amber ring (--color-accent), no flash on mouse click
+- Screen reader support: role="checkbox" + aria-checked on TaskItems, role="list" + aria-live="polite" on TaskList, role="alert" on ErrorMessage, aria-label on AddButton/DeleteButton/TaskInput, HexCheckbox SVG is aria-hidden="true"
+- Reduced motion: prefers-reduced-motion: reduce sets all transition-duration and animation-duration to 0.01s
+
 **From Project Context (Training Deliverables — inform stories but must not over-engineer MVP):**
 - Docker Compose containerisation (post-MVP deliverable, architecture must not prevent it)
 - Test coverage minimum 70%
@@ -147,6 +168,16 @@ NFR11: MVP: No formal accessibility compliance required; semantic HTML included 
 | FR27 | Epic 2 | Long text wrapping |
 | FR28 | Epic 2 | Per-item action disable during in-flight |
 | FR29 | Epic 2 | Client-side validation + trim |
+| FR30 | Epic 5 | Docker Compose orchestration |
+| FR31 | Epic 5 | Multi-stage Dockerfiles with non-root users |
+| FR32 | Epic 5 | Health check endpoint + Docker health checks |
+| FR33 | Epic 5 | Compose profiles for dev/test environments |
+| FR34 | Epic 5 | Container logs via docker-compose logs |
+| FR35 | Epic 6 | Minimum 70% meaningful test coverage |
+| FR36 | Epic 6 | Minimum 5 passing Playwright E2E tests |
+| FR37 | Epic 6 | WCAG AA accessibility audit — zero critical violations |
+| FR38 | Epic 6 | Security review — XSS, injection; documented remediations |
+| FR39 | Epic 6 | AI integration log |
 
 ## Epic List
 
@@ -181,6 +212,24 @@ When something goes wrong, the user sees it clearly, can keep working, and can r
 **FRs covered:** FR16, FR17, FR18, FR19, FR20
 
 ErrorMessage component with inline errors below failed items, structured backend error responses (ApiResponse<T> envelope), errors persist until next successful action on that item, retry-in-place pattern, optimistic rollback with smooth transitions.
+
+### Epic 5: Containerisation (Post-MVP — Step 3)
+
+The entire application runs via a single `docker-compose up` command with frontend, backend, and database containers orchestrated, health-checked, and configurable for dev/test environments.
+
+**FRs covered:** FR30, FR31, FR32, FR33, FR34
+**NFRs covered:** NFR15, NFR16
+
+Dockerfiles for frontend and backend (multi-stage builds, non-root users), docker-compose.yml orchestrating all containers, health check endpoints, compose profiles for dev/test via environment variables, accessible container logs.
+
+### Epic 6: Quality Assurance & Documentation (Post-MVP — Step 4)
+
+The application meets quality gates for test coverage, accessibility, and security, with all findings documented.
+
+**FRs covered:** FR35, FR36, FR37, FR38, FR39
+**NFRs covered:** NFR12, NFR13, NFR14
+
+Test coverage gap analysis and improvement to 70% minimum, 5+ Playwright E2E tests, WCAG AA accessibility audit (contrast token updates, keyboard navigation, screen reader support, reduced motion), security review for OWASP top 10, and AI integration log.
 
 ## Epic 1: Project Foundation & First Task
 
@@ -675,3 +724,216 @@ So that errors never block me or leave me confused.
 **Given** Epic 4 is complete and both servers are running
 **When** I run `pnpm --filter e2e test`
 **Then** at least 5 Playwright E2E tests pass (cumulative across all epics) including: error message displays when backend is unavailable and user can retry successfully
+
+## Epic 5: Containerisation (Post-MVP — Step 3)
+
+The entire application runs via a single `docker-compose up` command with frontend, backend, and database containers orchestrated, health-checked, and configurable for dev/test environments.
+
+### Story 5.1: Dockerfiles for Frontend & Backend
+
+As a **developer**,
+I want Dockerfiles for the frontend and backend that follow production best practices,
+So that each service can be built into a secure, optimised container image.
+
+**Acceptance Criteria:**
+
+**Given** the backend directory
+**When** I run `docker build -f backend/Dockerfile .`
+**Then** the image builds successfully using a multi-stage build (build stage + production stage)
+**And** the production stage runs as a non-root user
+**And** the final image contains only production dependencies and compiled output
+
+**Given** the frontend directory
+**When** I run `docker build -f frontend/Dockerfile .`
+**Then** the image builds successfully using a multi-stage build (build stage + nginx/serve stage)
+**And** the production stage runs as a non-root user
+**And** the final image serves the built static assets
+
+**Given** the backend Dockerfile
+**When** I inspect the health check configuration
+**Then** `GET /api/health` is defined as a health check endpoint in the backend code
+**And** it returns `200` with `{ success: true, data: { status: "ok" } }` using the `ApiResponse<T>` envelope
+
+### Story 5.2: Docker Compose Orchestration
+
+As a **developer**,
+I want a single `docker-compose up` command to start the entire application,
+So that I can run the full stack without manually starting each service.
+
+**Acceptance Criteria:**
+
+**Given** a fresh clone with Docker installed
+**When** I run `docker-compose up`
+**Then** three containers start: frontend, backend, and PostgreSQL database
+**And** the backend connects to the database and runs migrations automatically
+**And** the frontend is accessible at `http://localhost:5173` (or configured port)
+**And** the backend API is accessible through the frontend proxy
+**And** the application is fully functional (add, toggle, delete todos)
+
+**Given** the docker-compose.yml
+**When** I inspect the configuration
+**Then** containers are networked so frontend can reach backend and backend can reach the database
+**And** PostgreSQL data is persisted via a named volume
+**And** environment variables are configured via `.env` files or compose environment block
+**And** `.env.example` is updated with Docker-specific variable documentation
+
+**Given** the containers are running
+**When** I run `docker-compose ps`
+**Then** all three containers show as healthy
+**And** health checks are configured for backend (via `/api/health`) and database (via `pg_isready`)
+
+**Given** the containers are running
+**When** I run `docker-compose logs`
+**Then** logs from all containers are accessible
+**And** backend Pino logs are visible in the output
+
+### Story 5.3: Compose Profiles & Environment Configuration
+
+As a **developer**,
+I want compose profiles for dev and test environments,
+So that I can switch between configurations without editing the compose file.
+
+**Acceptance Criteria:**
+
+**Given** the docker-compose.yml supports profiles
+**When** I run `docker-compose up` (default)
+**Then** the dev profile activates with development-appropriate settings (e.g. hot reload mounts, debug logging)
+
+**Given** the docker-compose.yml supports profiles
+**When** I run `docker-compose --profile test up`
+**Then** a test environment starts with a separate test database
+**And** environment variables are configured for the test context
+
+**Given** the compose profiles are complete
+**When** I inspect the configuration
+**Then** environment-specific values (database URLs, ports, log levels) are driven by environment variables
+**And** no secrets or credentials are hardcoded in the compose file
+**And** README is updated with Docker usage instructions including profile commands
+
+**Given** Epic 5 is complete
+**When** I run `docker-compose up` and access the application
+**Then** all CRUD operations work end-to-end through containerised services
+**And** data persists across `docker-compose down` and `docker-compose up` cycles (via named volume)
+
+## Epic 6: Quality Assurance & Documentation (Post-MVP — Step 4)
+
+The application meets quality gates for test coverage, accessibility, and security, with all findings documented.
+
+### Story 6.1: Test Coverage Analysis & Improvement
+
+As a **developer**,
+I want comprehensive test coverage across the application,
+So that I have confidence in code quality and can catch regressions.
+
+**Acceptance Criteria:**
+
+**Given** the existing test suite from Epics 1-4
+**When** I run coverage analysis (`pnpm -r test -- --coverage`)
+**Then** a coverage report is generated for both frontend and backend
+
+**Given** the coverage report identifies gaps
+**When** I review uncovered code paths
+**Then** meaningful tests are added to close gaps — targeting business logic, error paths, and edge cases (not boilerplate or trivial getters)
+**And** the overall meaningful coverage reaches minimum 70%
+
+**Given** the E2E test suite
+**When** I run `pnpm --filter e2e test`
+**Then** at least 5 Playwright E2E tests pass covering core user flows: add a task, toggle complete/incomplete, delete a task, error display and retry, app loads with persisted data
+
+**Given** all tests pass
+**When** I inspect the test suite
+**Then** unit/integration tests are co-located with source files
+**And** E2E tests are in `e2e/` at the monorepo root
+**And** no test relies on implementation details that would break on refactor
+
+### Story 6.2: Accessibility Audit & Remediation
+
+As a **user**,
+I want the application to meet WCAG AA accessibility standards,
+So that the app is usable regardless of ability or assistive technology.
+
+**Acceptance Criteria:**
+
+**Given** the existing MVP colour tokens
+**When** I update the 4 contrast-failing tokens
+**Then** `--color-placeholder` is updated to `#826B4F` (4.77:1 ratio)
+**And** `--color-done-text` is updated to `#7A6D5B` (4.76:1 ratio)
+**And** `--color-input-border` is updated to `#A08862` (3.20:1 ratio)
+**And** `--color-hex-stroke` is updated to `#9A8250` (3.48:1 ratio)
+**And** the visual warmth of the palette is preserved
+
+**Given** the application is running
+**When** I navigate using only the keyboard
+**Then** Tab moves focus between TaskInput, AddButton, and TaskItems
+**And** Enter/Space on a TaskItem toggles the HexCheckbox
+**And** Delete/Backspace on a focused TaskItem triggers delete
+**And** all focus indicators use `:focus-visible` with amber ring (`--color-accent`, 2px solid, offset 2px)
+**And** no focus ring appears on mouse click
+
+**Given** the application is running with a screen reader
+**When** I navigate the interface
+**Then** TaskItems have `role="checkbox"` with `aria-checked` reflecting completion state
+**And** TaskList has `role="list"` with `aria-live="polite"` announcing changes
+**And** ErrorMessages have `role="alert"`
+**And** TaskInput has `aria-label="Add a new task"`
+**And** AddButton has `aria-label="Add task"` and `disabled` attribute when inactive
+**And** DeleteButton has `aria-label="Delete task"`
+**And** HexCheckbox SVG is `aria-hidden="true"`
+
+**Given** the user has `prefers-reduced-motion: reduce` enabled
+**When** any transition or animation occurs
+**Then** all `transition-duration` and `animation-duration` are `0.01s`
+
+**Given** all accessibility work is complete
+**When** I run an automated Lighthouse or axe-core audit via Playwright
+**Then** zero critical WCAG AA violations are reported
+**And** the audit results are documented
+
+### Story 6.3: Security Review & Documentation
+
+As a **developer**,
+I want a security review documenting findings and remediations,
+So that common vulnerabilities are identified and addressed before deployment.
+
+**Acceptance Criteria:**
+
+**Given** the application codebase
+**When** I conduct an OWASP top 10 review
+**Then** XSS vectors are assessed — all user input is sanitised or safely rendered (React's default escaping, TypeBox backend validation)
+**And** injection vectors are assessed — parameterised queries via Drizzle ORM, no raw SQL
+**And** any other relevant OWASP categories are checked (CSRF, security headers, dependency vulnerabilities)
+
+**Given** the review is complete
+**When** findings exist
+**Then** each finding is documented with severity (critical/high/medium/low), description, and remediation applied
+**And** zero critical or high severity findings remain unresolved
+
+**Given** the security review is complete
+**When** I inspect the deliverables
+**Then** a security review report is produced in `_bmad-output/planning-artifacts/` or `docs/`
+**And** the report lists all findings, their severities, and remediations applied
+
+### Story 6.4: AI Integration Log & Final Documentation
+
+As a **developer**,
+I want an AI integration log documenting how AI tools were used in this project,
+So that the development process is transparent and lessons are captured.
+
+**Acceptance Criteria:**
+
+**Given** the project has been built with AI assistance
+**When** I create the AI integration log
+**Then** it documents: AI agent usage (which agents, which tasks), MCP server usage, test generation approach, debugging cases where AI was involved, and limitations encountered
+
+**Given** the AI integration log is complete
+**When** I inspect the document
+**Then** it is stored in the project documentation (e.g. `docs/ai-integration-log.md`)
+**And** it is referenced from the README
+
+**Given** Epic 6 is complete
+**When** I review all deliverables
+**Then** test coverage report shows >= 70% meaningful coverage
+**And** 5+ E2E tests pass
+**And** WCAG AA audit shows zero critical violations
+**And** security review report is complete with zero unresolved critical/high findings
+**And** AI integration log is complete

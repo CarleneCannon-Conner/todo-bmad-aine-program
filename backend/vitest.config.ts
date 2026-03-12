@@ -19,5 +19,19 @@ export default defineConfig({
     globals: true,
     passWithNoTests: true,
     env: loadEnvFile('.env.test'),
+    exclude: ['dist/**', 'node_modules/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'text-summary', 'html', 'lcov'],
+      reportsDirectory: './coverage',
+      include: ['src/**/*.ts'],
+      exclude: ['src/**/*.test.ts', 'src/setup.test.ts', 'src/server.ts'],
+      thresholds: {
+        lines: 70,
+        branches: 70,
+        functions: 70,
+        statements: 70,
+      },
+    },
   },
 });
